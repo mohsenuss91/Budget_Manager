@@ -10,6 +10,8 @@
 
 #include "classes.h"
 #include <iostream>
+#include <fstream>
+#include <cstdlib>
 using namespace std;
 
 // 'Profits' functions
@@ -23,7 +25,7 @@ void Profits::setAmount(float amnt){
 void Profits::printEntry(void){
         cout << date; // print date
         cout << " . . . $"; // print spacer
-        cout << fixed << setprecision(2) << (float)amount / 100 << endl; // print amount
+        cout << amount << endl; // print amount
 }
 
 // 'Expenses' Functions
@@ -38,10 +40,11 @@ void Expenses::setReason(std::string rsn){
     reason = rsn;
 }
 void Expenses::printEntry(void){
-        cout << date; // print date
-        cout << " . . . $"; // print spacer
-    cout << fixed << setprecision(2) << amount << endl;//(float)amount / 100 << endl; // print amount
-        cout << "Reason: " << reason << endl; // print reason
+    cout << date; // print date
+    cout << " . . . $"; // print spacer
+    cout << fixed << setprecision(2) << amount; // print amount
+    cout << " . . . "; // print spacer
+    cout << reason << endl; // print reason
 }
 
 // 'drawMainMenu' Function to print the main menu
@@ -121,3 +124,67 @@ std::string checkDate(std::string d)
         return d;
     }
 }
+
+void loadExpense(std::string filename, std::vector<Expenses> &inVector,int size)
+{
+    std::string buffer(41, '\0');
+    std::ifstream inFile(filename);
+    if(!inFile)
+    {
+        cout << "Error opening file named \"" << filename << "\". Check if it exists.\n";
+        exit(2);
+    }
+    for (int i = 0; i < size; i++)
+    {
+        //skip dollar sign
+        std::getline(inFile,buffer,'$');
+        //read the amount and convert to float
+        std::getline(inFile,buffer,',');
+        inVector[i].setAmount(std::stod(buffer));
+        //read the reason and set to reason
+        std::getline(inFile,buffer,',');
+        inVector[i].setReason(buffer);
+        //read the date and assign to date
+        //DOES NOT WORK
+        std::getline(inFile,buffer,'\n');
+        inVector[i].setDate(buffer);
+    }
+    inFile.close();
+}
+
+void loadProfits(std::string filename, std::vector<Profits> &inVector,int size)
+{
+    std::string buffer(9, '\0');
+    std::ifstream inFile(filename);
+    if(!inFile)
+    {
+        cout << "Error opening file named \"" << filename << "\". Check if it exists.\n";
+        exit(2);
+    }
+    for (int i = 0; i < size; i++)
+    {
+        //read the date and assign to date
+        //DOES NOT WORK
+        std::getline(inFile,buffer,',');
+        inVector[i].setDate(buffer);
+        //skip dollar sign
+        std::getline(inFile,buffer,'$');
+        //read the amount and convert to float
+        std::getline(inFile,buffer,'\n');
+        inVector[i].setAmount(std::stod(buffer));
+        
+    }
+    inFile.close();
+}
+
+
+
+
+
+
+
+
+
+
+
+
