@@ -24,8 +24,9 @@
             **********************************************************************************/
 
 #include <iostream>
-#include <fstream> //include for fopen and fclose
-#include <vector>
+#include <cstdlib> //include for exit()
+#include <limits> //include for numeric_limits
+#include <vector> //include for vector arrays
 #include "classes.h" //include for classes
 
 using namespace std;
@@ -45,6 +46,7 @@ int main(void)
     // loads files into memory
     loadExpense("data/expenses.csv", expenses, 5);
     loadProfits("data/tips.csv", tips, 5);
+    
     // prints out the main menu
     drawMainMenu();
     

@@ -8,10 +8,13 @@
 //  Copyright (c) 2014 Ivan Hernandez. All rights reserved.
 //
 
-#include "classes.h"
 #include <iostream>
-#include <fstream>
-#include <cstdlib>
+#include <fstream> //include for fopen and fclose
+#include <limits> //include for numeric_limits
+#include <string> //include for string
+#include <cstdlib> //include for exit()
+#include "classes.h" //include for classes
+
 using namespace std;
 
 // 'Profits' functions
