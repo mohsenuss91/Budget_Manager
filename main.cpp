@@ -20,10 +20,9 @@ int main(void)
 {
     /************************************
             Pseudocode ToDo
-     Open files(checks.csv, tips.csv, expenses.csv, specialexepenses.csv).
+     Fix readline when loading files skipping over date
      ?? Read and check first line for numbers of entries ??
      Initialize vectors to number of entries size per file.
-     Load all the values from the csv files onto the vectors.
      Add submenu to 4 main options.
      Change cases to push.back() new value onto vector.
      signal change has occured to write changes when closing.
@@ -32,24 +31,22 @@ int main(void)
      implement view all function.
      Implement save function.
      ***********************************/
+    
     // initialize variables needed for program
-    vector<Profits> tips(10);
-    vector<Expenses> expenses(10);
+    vector<Profits> tips(5);
+    vector<Expenses> expenses(5);
     int inChoice;
+    
+    
     float inAmount;
-    std::string inDate(9, '\0');
-    std::string inReason(41, '\0');
+    string inDate(9, '\0');
+    string inReason(41, '\0');
     
-    ifstream expensesFile;
-    expensesFile.open("data/expenses.csv");
-    
+    // loads files into memory
+    loadExpense("data/expenses.csv", expenses, 5);
+    loadProfits("data/tips.csv", tips, 5);
     // prints out the main menu
     drawMainMenu();
-    
-    // start of temp
-    tips[0].setAmount(250.50);
-    tips[0].setDate("12/25/14");
-    // end of temp
     
     do
     {
@@ -79,13 +76,13 @@ int main(void)
                 expenses[0].setAmount(inAmount);
                 cout << "Give me the reason (40 character limit): ";
                 cin.ignore();
-                std::getline (std::cin,inReason);
+                getline (cin,inReason);
                 while (inReason.length() > 40)
                 {
                     cin.clear();
                     //cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                     cout << "Try Again: ";
-                    std::getline (std::cin,inReason);
+                    getline (cin,inReason);
                 }
                 expenses[0].setReason(inReason);
                 break;
@@ -98,8 +95,14 @@ int main(void)
                 
             case 5 :
             {
-                tips[0].printEntry();
-                expenses[0].printEntry();
+                cout << "\nEXPENSES\n";
+                for (int i = 0;i<5; i++) {
+                    expenses[i].printEntry();
+                }
+                cout << "\nTIPS\n";
+                for (int i = 0;i<5; i++) {
+                    tips[i].printEntry();
+                }
                 break;
             }
             
