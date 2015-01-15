@@ -11,9 +11,7 @@
 
             /********************************************************************************
                                                     ToDo
-             Fix readline when loading files skipping over date
              ?? Read and check first line for numbers of entries ??
-             Initialize vectors to number of entries size per file.
              Add submenu to 4 main options.
              Change cases to push.back() new value onto vector.
              signal change has occured to write changes when closing.
@@ -34,9 +32,16 @@ using namespace std;
 int main(void)
 {
     // initialize variables needed for program
-    vector<Profits> tips(5);
-    vector<Expenses> expenses(5);
+    const int NUMOFEXPENSES = 432;
+    const int NUMOFSPECIALEXPENSES = 11;
+    const int NUMOFTIPS = 313;
+    const int NUMOFCHECKS = 80;
+    vector<Profits> tips(NUMOFTIPS);
+    vector<Profits> checks(NUMOFCHECKS);
+    vector<Expenses> expenses(NUMOFEXPENSES);
+    vector<Expenses> specialExpenses(NUMOFSPECIALEXPENSES);
     int inChoice;
+    
     
     
     float inAmount;
@@ -44,8 +49,10 @@ int main(void)
     string inReason(41, '\0');
     
     // loads files into memory
-    loadExpense("data/expenses.csv", expenses, 5);
-    loadProfits("data/tips.csv", tips, 5);
+    loadExpense("data/expenses.csv", expenses, NUMOFEXPENSES);
+    loadExpense("data/specialexpenses.csv", specialExpenses, NUMOFSPECIALEXPENSES);
+    loadProfits("data/tips.csv", tips, NUMOFTIPS);
+    loadProfits("data/checks.csv", checks, NUMOFCHECKS);
     
     // prints out the main menu
     drawMainMenu();
@@ -98,12 +105,23 @@ int main(void)
             case 5 :
             {
                 cout << "\nEXPENSES\n";
-                for (int i = 0;i<5; i++) {
+                for (int i = NUMOFEXPENSES-10;i<NUMOFEXPENSES; i++) {
                     expenses[i].printEntry();
                 }
-                cout << "\nTIPS\n";
-                for (int i = 0;i<5; i++) {
+                
+                cout << "\nSPECIALEXPENSES\n";
+                for (int i = NUMOFSPECIALEXPENSES-10;i<NUMOFSPECIALEXPENSES; i++) {
+                    specialExpenses[i].printEntry();
+                }
+                
+                cout << "\nTIPS";
+                for (int i = NUMOFTIPS-10;i<NUMOFTIPS; i++) {
                     tips[i].printEntry();
+                }
+                
+                cout << "\n\nCHECKS";
+                for (int i = NUMOFCHECKS-10;i<NUMOFCHECKS; i++) {
+                    checks[i].printEntry();
                 }
                 break;
             }

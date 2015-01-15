@@ -28,7 +28,7 @@ void Profits::setAmount(float amnt){
 void Profits::printEntry(void){
         cout << date; // print date
         cout << " . . . $"; // print spacer
-        cout << amount << endl; // print amount
+        cout << amount ; // print amount
 }
 
 // 'Expenses' Functions
@@ -149,7 +149,12 @@ void loadExpense(std::string filename, std::vector<Expenses> &inVector,int size)
         inVector[i].setReason(buffer);
         //read the date and assign to date
         //DOES NOT WORK
-        std::getline(inFile,buffer,'\n');
+        std::getline(inFile,buffer,'\r');
+        /*for (int j = 0; buffer[j] != '\0'; j++)
+        {
+            cout << j << ":" << (int)buffer[j] << ":" << buffer[j] << " ";
+        }
+        cout << endl;*/
         inVector[i].setDate(buffer);
     }
     inFile.close();
@@ -173,7 +178,7 @@ void loadProfits(std::string filename, std::vector<Profits> &inVector,int size)
         //skip dollar sign
         std::getline(inFile,buffer,'$');
         //read the amount and convert to float
-        std::getline(inFile,buffer,'\n');
+        std::getline(inFile,buffer,'\r');
         inVector[i].setAmount(std::stod(buffer));
         
     }
