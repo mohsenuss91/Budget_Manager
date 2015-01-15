@@ -12,10 +12,12 @@
 #define _classes_h
 #include <string> //include front strings
 #include <iomanip> //include for setting decimal precision
+#include <vector>
 
 void drawMainMenu(void);
 float checkAmount(float);
 std::string checkDate(std::string);
+
 
 class Profits{
     float amount;
@@ -37,4 +39,6 @@ public:
     void printEntry(void);
 };
 
+void loadExpense(std::string, std::vector<Expenses>&, int);
+void loadProfits(std::string, std::vector<Profits>&, int);
 #endif
