@@ -9,6 +9,20 @@
 //  Copyright (c) 2014 Ivan Hernandez. All rights reserved.
 //
 
+            /********************************************************************************
+                                                    ToDo
+             Fix readline when loading files skipping over date
+             ?? Read and check first line for numbers of entries ??
+             Initialize vectors to number of entries size per file.
+             Add submenu to 4 main options.
+             Change cases to push.back() new value onto vector.
+             signal change has occured to write changes when closing.
+             ?? Increase number of entries value ??
+             Implement view function to show only 10 lines per viewing but allow manual input.
+             implement view all function.
+             Implement save function.
+            **********************************************************************************/
+
 #include <iostream>
 #include <fstream> //include for fopen and fclose
 #include <vector>
@@ -18,20 +32,6 @@ using namespace std;
 
 int main(void)
 {
-    /************************************
-            Pseudocode ToDo
-     Fix readline when loading files skipping over date
-     ?? Read and check first line for numbers of entries ??
-     Initialize vectors to number of entries size per file.
-     Add submenu to 4 main options.
-     Change cases to push.back() new value onto vector.
-     signal change has occured to write changes when closing.
-     ?? Increase number of entries value ??
-     Implement view function to show only 10 lines per viewing but allow manual input.
-     implement view all function.
-     Implement save function.
-     ***********************************/
-    
     // initialize variables needed for program
     vector<Profits> tips(5);
     vector<Expenses> expenses(5);
