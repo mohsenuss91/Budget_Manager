@@ -13,12 +13,12 @@
                                                     ToDo
              ?? Read and check first line for numbers of entries ??
              Add submenu to 4 main options.
-             Change cases to push.back() new value onto vector.
              signal change has occured to write changes when closing.
              ?? Increase number of entries value ??
              Implement view function to show only 10 lines per viewing but allow manual input.
              implement view all function.
              Implement save function.
+             Fix output screen.
             **********************************************************************************/
 
 #include <iostream>
@@ -42,11 +42,11 @@ int main(void)
     vector<Expenses> specialExpenses(NUMOFSPECIALEXPENSES);
     int inChoice;
     
-    
-    
-    float inAmount;
+    /*DELETE
+     float inAmount;
     string inDate(9, '\0');
     string inReason(41, '\0');
+     */
     
     // loads files into memory
     loadExpense("data/expenses.csv", expenses, NUMOFEXPENSES);
@@ -65,63 +65,55 @@ int main(void)
         {
             case 1 :
             {
-                cout << "Under construction!\n\n"; break;
+                static Profits temp;
+                temp = getSingleProfit(temp);
+                checks.push_back(temp);
+                break;
             }
                 
             case 2 :
             {
-                cout << "Under construction!\n\n"; break;
+                static Profits temp;
+                temp = getSingleProfit(temp);
+                tips.push_back(temp);
+                break;
             }
                 
             case 3 :
             {
-                cout << "Give me the date: " ;
-                cin >> inDate;
-                inDate = checkDate(inDate);
-                expenses[0].setDate(inDate);
-                cout << "Give me the amount: $";
-                cin >> inAmount;
-                inAmount = checkAmount(inAmount);
-                expenses[0].setAmount(inAmount);
-                cout << "Give me the reason (40 character limit): ";
-                cin.ignore();
-                getline (cin,inReason);
-                while (inReason.length() > 40)
-                {
-                    cin.clear();
-                    //cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                    cout << "Try Again: ";
-                    getline (cin,inReason);
-                }
-                expenses[0].setReason(inReason);
+                static Expenses temp;
+                temp = getSingleExpense(temp);
+                expenses.push_back(temp);
                 break;
             }
                 
             case 4 :
             {
-                cout << "Under construction!\n\n"; break;
+                static Expenses temp;
+                temp = getSingleExpense(temp);
+                specialExpenses.push_back(temp);
+                break;
             }
                 
             case 5 :
             {
-                cout << "\nEXPENSES\n";
-                for (int i = NUMOFEXPENSES-10;i<NUMOFEXPENSES; i++) {
-                    expenses[i].printEntry();
-                }
-                
-                cout << "\nSPECIALEXPENSES\n";
-                for (int i = NUMOFSPECIALEXPENSES-10;i<NUMOFSPECIALEXPENSES; i++) {
-                    specialExpenses[i].printEntry();
-                }
-                
                 cout << "\nTIPS";
-                for (int i = NUMOFTIPS-10;i<NUMOFTIPS; i++) {
+                for (int i = NUMOFTIPS-4;i<NUMOFTIPS+1; i++) {
                     tips[i].printEntry();
                 }
                 
                 cout << "\n\nCHECKS";
-                for (int i = NUMOFCHECKS-10;i<NUMOFCHECKS; i++) {
+                for (int i = NUMOFCHECKS-4;i<NUMOFCHECKS+1; i++) {
                     checks[i].printEntry();
+                }
+                cout << "\nEXPENSES\n";
+                for (int i = NUMOFEXPENSES-4;i<NUMOFEXPENSES+1; i++) {
+                    expenses[i].printEntry();
+                }
+                
+                cout << "\nSPECIALEXPENSES\n";
+                for (int i = NUMOFSPECIALEXPENSES-4;i<NUMOFSPECIALEXPENSES+1; i++) {
+                    specialExpenses[i].printEntry();
                 }
                 break;
             }
