@@ -34,25 +34,20 @@ int main(void)
     // initialize variables needed for program
     const int NUMOFEXPENSES = 432;
     const int NUMOFSPECIALEXPENSES = 11;
-    const int NUMOFTIPS = 313;
-    const int NUMOFCHECKS = 80;
-    vector<Profits> tips(NUMOFTIPS);
-    vector<Profits> checks(NUMOFCHECKS);
+    const int NUMOFCHECKINGS = 313;
+    const int NUMOFSAVINGS = 80;
+    vector<Profits> checkings(NUMOFCHECKINGS);
+    vector<Profits> savings(NUMOFSAVINGS);
     vector<Expenses> expenses(NUMOFEXPENSES);
     vector<Expenses> specialExpenses(NUMOFSPECIALEXPENSES);
     int inChoice;
     
-    /*DELETE
-     float inAmount;
-    string inDate(9, '\0');
-    string inReason(41, '\0');
-     */
-    
     // loads files into memory
     loadExpense("data/expenses.csv", expenses, NUMOFEXPENSES);
     loadExpense("data/specialexpenses.csv", specialExpenses, NUMOFSPECIALEXPENSES);
-    loadProfits("data/tips.csv", tips, NUMOFTIPS);
-    loadProfits("data/checks.csv", checks, NUMOFCHECKS);
+    loadProfits("data/checkings.csv", checkings, NUMOFCHECKINGS);
+    loadProfits("data/savings.csv", savings, NUMOFSAVINGS);
+    
     
     // prints out the main menu
     drawMainMenu();
@@ -65,46 +60,52 @@ int main(void)
         {
             case 1 :
             {
-                static Profits temp;
-                temp = getSingleProfit(temp);
-                checks.push_back(temp);
+                drawSubMenu("Checkings");
+                cin >> inChoice;
+                if(inChoice == 1)
+                {
+                    static Profits newInput;
+                    savings.push_back( inputProfit(newInput) );
+                    break;
+                }
+                else
+                {
+                    cout << "Invalid Input." << endl;
+                }
                 break;
             }
                 
             case 2 :
             {
-                static Profits temp;
-                temp = getSingleProfit(temp);
-                tips.push_back(temp);
+                static Profits newInput;
+                checkings.push_back( inputProfit(newInput) );
                 break;
             }
                 
             case 3 :
             {
-                static Expenses temp;
-                temp = getSingleExpense(temp);
-                expenses.push_back(temp);
+                static Expenses newInput;
+                expenses.push_back( inputExpense(newInput) );
                 break;
             }
                 
             case 4 :
             {
-                static Expenses temp;
-                temp = getSingleExpense(temp);
-                specialExpenses.push_back(temp);
+                static Expenses newInput;
+                specialExpenses.push_back( inputExpense(newInput) );
                 break;
             }
                 
             case 5 :
             {
-                cout << "\nTIPS";
-                for (int i = NUMOFTIPS-4;i<NUMOFTIPS+1; i++) {
-                    tips[i].printEntry();
+                cout << "\nCHECKINGS\n";
+                for (int i = NUMOFCHECKINGS-4;i<NUMOFCHECKINGS+1; i++) {
+                    checkings[i].printEntry();
                 }
                 
-                cout << "\n\nCHECKS";
-                for (int i = NUMOFCHECKS-4;i<NUMOFCHECKS+1; i++) {
-                    checks[i].printEntry();
+                cout << "\nSAVINGS\n";
+                for (int i = NUMOFSAVINGS-4;i<NUMOFSAVINGS+1; i++) {
+                    savings[i].printEntry();
                 }
                 cout << "\nEXPENSES\n";
                 for (int i = NUMOFEXPENSES-4;i<NUMOFEXPENSES+1; i++) {
