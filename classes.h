@@ -14,30 +14,38 @@
 #include <iomanip> //include for setting decimal precision
 #include <vector>
 
-class Profits{
+class Entry{
+protected:
     float amount;
     std::string date;
+    bool isChanged;
 public:
     void setDate(std::string);
     void setAmount(float amnt);
+    void loadDate(std::string);
+    void loadAmount(float amnt);
+};
+
+class Profits : public Entry{
+public:
+    Profits(void);
     void printEntry(void);
 };
 
-class Expenses{
-    float amount;
-    std::string date, reason;
+class Expenses : public Entry{
+    std::string reason;
 public:
-    void setDate(std::string);
-    void setAmount(float);
+    Expenses(void);
     void setReason(std::string);
     void printEntry(void);
 };
 
 void drawMainMenu(void);
-float checkAmount(float);
-std::string checkDate(std::string);
-Expenses getSingleExpense(Expenses);
-Profits getSingleProfit(Profits);
+void drawSubMenu(std::string);
+
+Expenses inputExpense(Expenses);
+Profits inputProfit(Profits);
+
 void loadExpense(std::string, std::vector<Expenses>&, int);
 void loadProfits(std::string, std::vector<Profits>&, int);
 #endif
