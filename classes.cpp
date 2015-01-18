@@ -18,27 +18,80 @@
 
 using namespace std;
 
-// 'Profits' functions
+// 'Entry' functions
 
-void Profits::setDate(std::string d){
+void Entry::loadDate(std::string d){ //move inline
     date = d;
 }
-void Profits::setAmount(float amnt){
+void Entry::loadAmount(float amnt){ //move inline
     amount = amnt;
 }
+void Entry::setDate(std::string d){
+    int size = d.length();
+    int slashCount = 0;
+    int digitCount = 0;
+    
+    for (int i = 0; i < size; i++)
+    {
+        if (d[i] == '/')
+            slashCount++;
+        else if (isdigit(d[i]))
+            digitCount++;
+        else
+            digitCount = 0;
+    }
+    
+    if (slashCount == 2 && digitCount >= 4 && digitCount <= 6) // correct date format 1/1/15 or 12/12/15
+    { date = d; }
+    else
+    {
+        cout << "Try Again: ";
+        cin >> d;
+        setDate(d);
+    }
+}
+void Entry::setAmount(float amnt){
+    int buf;
+    while(amnt == 0)
+    {
+        cin.clear();
+        cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // check note
+        cout << "Try Again: $";
+        cin >> amnt;
+    }
+    buf = amnt * 100;
+    amnt = buf / 100.0;
+    amount = amnt;
+}
+/*
+ NOTE:
+ numeric_limits<variable_type> returns limit that the variable can hold.
+ adding ::max at the end ^ will return maximum limit.
+ streamsize counts characters in a stream.
+ effectivley ignoring every single character in the stream.
+ cin.ignore takes a second parameter that mean stop if this character is
+ found even if first parameter isnt met, so basically empties cin stream.
+ */
+
+
+// 'Profits' functions
+Profits::Profits(void){
+    amount = 0.0;
+    date = "00/00/00";
+}
+
 void Profits::printEntry(void){
         cout << date;
         cout << " . . . $";
-        cout << amount ;
+        cout << fixed << setprecision(2) << amount << endl;
 }
+
 
 // 'Expenses' Functions
-
-void Expenses::setDate(std::string d){
-    date = d;
-}
-void Expenses::setAmount(float amnt){
-    amount = amnt;
+Expenses::Expenses(void){
+    amount = 0.0;
+    date = "00/00/00";
+    reason = "NaNaNa";
 }
 void Expenses::setReason(std::string rsn){
     reason = rsn;
@@ -51,8 +104,8 @@ void Expenses::printEntry(void){
     cout << reason << endl;
 }
 
-// 'drawMainMenu' prints the main menu
 
+// 'drawMainMenu' prints the main menu
 void drawMainMenu(void)
 {
     cout << "\n\t\t***********************************\n"
@@ -67,72 +120,22 @@ void drawMainMenu(void)
     "\t\t***********************************\n";
 }
 
- //'checkAmount' will verify if entered number is valid and will truncate the excess decimals
-
-float checkAmount(float val)
+void drawSubMenu(std::string category)
 {
-    int buf;
-    while(val == 0)
-    {
-        cin.clear();
-        cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // check note
-        cout << "Try Again: $";
-        cin >> val;
-    }
-    buf = val * 100;
-    val = buf / 100.0;
-    return val;
-}
-/* 
- NOTE:
- numeric_limits<variable_type> returns limit that the variable can hold.
- adding ::max at the end ^ will return maximum limit.
- streamsize counts characters in a stream.
- effectivley ignoring every single character in the stream.
- cin.ignore takes a second parameter that mean stop if this character is
- found even if first parameter isnt met, so basically empties cin stream.
-*/
-
-// 'checkDate' will verify date is valid by checking for 2 slashes and atleast 4 but not more then 6 integers
-
-std::string checkDate(std::string d)
-{
-    int size = d.length();
-    int slashCount = 0;
-    int digitCount = 0;
-    /*DELETE
-    if (size > 8)
-    {
-        cout << "Try Again: ";
-        cin >> d;
-        d = checkDate(d);
-        return d;
-    }
-     */
+    cout << "\n\t\t*******************************\n"
+    "\t\t*                             *\n"\
+    "\t\t*   (1) Add Input             *\n"
+    "\t\t*   (2) Remove Input          *\n"
+    "\t\t*   (3) View All              *\n"
+    "\t\t*   (4) Return to main menu   *\n"
+    "\t\t*                             *\n"
+    "\t\t*******************************\n";
     
-    for (int i = 0; i < size; i++)
-    {
-        if (d[i] == '/')
-            slashCount++;
-        else if (isdigit(d[i]))
-            digitCount++;
-        else
-            digitCount = 0;
-    }
-    
-    if (slashCount == 2 && digitCount >= 4 && digitCount <= 6) // correct date format 1/1/15 or 12/12/15
-        { return d; }
-    else
-    {
-        cout << "Try Again: ";
-        cin >> d;
-        d = checkDate(d);
-        return d;
-    }
+    cout << endl << "How will you modify " << category << ": ";
 }
+
 
 // 'loadExpense' will read inputted file and load values on to expenses vector
-
 void loadExpense(std::string filename, std::vector<Expenses> &inVector,int size)
 {
     std::string buffer(41, '\0');
@@ -147,17 +150,17 @@ void loadExpense(std::string filename, std::vector<Expenses> &inVector,int size)
         std::getline(inFile,buffer,'$'); //skip dollar sign
         
         std::getline(inFile,buffer,',');
-        inVector[i].setAmount(std::stod(buffer));
+        inVector[i].loadAmount(std::stod(buffer));
         std::getline(inFile,buffer,',');
         inVector[i].setReason(buffer);
         std::getline(inFile,buffer,'\r');
-        inVector[i].setDate(buffer);
+        inVector[i].loadDate(buffer);
     }
     inFile.close();
 }
 
-// 'loadExpense' will read inputted file and load values on to profits vector
 
+// 'loadProfits' will read inputted file and load values on to profits vector
 void loadProfits(std::string filename, std::vector<Profits> &inVector,int size)
 {
     std::string buffer(9, '\0');
@@ -170,20 +173,19 @@ void loadProfits(std::string filename, std::vector<Profits> &inVector,int size)
     for (int i = 0; i < size; i++)
     {
         std::getline(inFile,buffer,',');
-        inVector[i].setDate(buffer);
+        inVector[i].loadDate(buffer);
         
         std::getline(inFile,buffer,'$');//skip dollar sign
         
-        std::getline(inFile,buffer,'\r');
-        inVector[i].setAmount(std::stod(buffer));
+        std::getline(inFile,buffer,'\n');
+        inVector[i].loadAmount(std::stod(buffer));
     }
     inFile.close();
 }
 
 
-// 'getExpense' will get values from user and then append the entries to the vector.
-
-Expenses getSingleExpense(Expenses temp)
+// 'inputExpense' will get values from user and then append the entries to the vector.
+Expenses inputExpense(Expenses newInput)
 {
     float inAmount;
     string inDate(9, '\0');
@@ -191,12 +193,10 @@ Expenses getSingleExpense(Expenses temp)
     
     cout << "Give me the date: " ;
     cin >> inDate;
-    inDate = checkDate(inDate);
-    temp.setDate(inDate);
+    newInput.setDate(inDate);
     cout << "Give me the amount: $";
     cin >> inAmount;
-    inAmount = checkAmount(inAmount);
-    temp.setAmount(inAmount);
+    newInput.setAmount(inAmount);
     cout << "Give me the reason (40 character limit): ";
     cin.ignore();
     getline (cin,inReason);
@@ -206,24 +206,24 @@ Expenses getSingleExpense(Expenses temp)
         cout << "Try Again: ";
         getline (cin,inReason);
     }
-    temp.setReason(inReason);
-    return temp;
+    newInput.setReason(inReason);
+    return newInput;
 }
 
-Profits getSingleProfit(Profits temp)
+
+// 'inputProfit' will get values from user and then append the entries to the vector.
+Profits inputProfit(Profits newInput)
 {
     float inAmount;
     string inDate(9, '\0');
     
     cout << "Give me the date: " ;
     cin >> inDate;
-    inDate = checkDate(inDate);
-    temp.setDate(inDate);
+    newInput.setDate(inDate);
     cout << "Give me the amount: $";
     cin >> inAmount;
-    inAmount = checkAmount(inAmount);
-    temp.setAmount(inAmount);
-    return temp;
+    newInput.setAmount(inAmount);
+    return newInput;
 }
 
 
