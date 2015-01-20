@@ -29,6 +29,7 @@ public:
 class Profits : public Entry{
 public:
     Profits(void);
+    ~Profits(void);
     void printEntry(void);
 };
 
@@ -36,6 +37,7 @@ class Expenses : public Entry{
     std::string reason;
 public:
     Expenses(void);
+    ~Expenses(void);
     void setReason(std::string);
     void printEntry(void);
 };

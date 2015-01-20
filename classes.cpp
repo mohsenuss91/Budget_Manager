@@ -27,9 +27,9 @@ void Entry::loadAmount(float amnt){ //move inline
     amount = amnt;
 }
 void Entry::setDate(std::string d){
-    int size = d.length();
-    int slashCount = 0;
-    int digitCount = 0;
+    unsigned int size = (int)d.length();
+    unsigned int slashCount = 0;
+    unsigned int digitCount = 0;
     
     for (int i = 0; i < size; i++)
     {
@@ -51,7 +51,7 @@ void Entry::setDate(std::string d){
     }
 }
 void Entry::setAmount(float amnt){
-    int buf;
+    unsigned int buf;
     while(amnt == 0)
     {
         cin.clear();
@@ -79,7 +79,9 @@ Profits::Profits(void){
     amount = 0.0;
     date = "00/00/00";
 }
-
+Profits::~Profits(){
+    //destructor;
+}
 void Profits::printEntry(void){
         cout << date;
         cout << " . . . $";
@@ -92,6 +94,9 @@ Expenses::Expenses(void){
     amount = 0.0;
     date = "00/00/00";
     reason = "NaNaNa";
+}
+Expenses::~Expenses(){
+    //destructor;
 }
 void Expenses::setReason(std::string rsn){
     reason = rsn;

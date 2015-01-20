@@ -40,7 +40,8 @@ int main(void)
     vector<Profits> savings(NUMOFSAVINGS);
     vector<Expenses> expenses(NUMOFEXPENSES);
     vector<Expenses> specialExpenses(NUMOFSPECIALEXPENSES);
-    int inChoice;
+    unsigned int inChoice;
+    char inChar;
     
     // loads files into memory
     loadExpense("data/expenses.csv", expenses, NUMOFEXPENSES);
@@ -60,18 +61,48 @@ int main(void)
         {
             case 1 :
             {
+                cout << endl << "The size followed by the capacity followed by the end of checkings are: " << checkings.size() << ", " << checkings.capacity() << endl << endl;
                 drawSubMenu("Checkings");
                 cin >> inChoice;
                 if(inChoice == 1)
                 {
                     static Profits newInput;
-                    savings.push_back( inputProfit(newInput) );
+                    checkings.push_back( inputProfit(newInput) );
+                    cout << endl << "The size followed by the capacity of checkings are: " << checkings.size() << ", " << checkings.capacity() << endl << endl;
                     break;
                 }
-                else
+                else if (inChoice == 2)
                 {
-                    cout << "Invalid Input." << endl;
+                    cout << "Are you sure you want to remove last input? (Y/N): ";
+                    cin >>inChar;
+                    
+                    if (inChar == 'Y' || inChar == 'y')
+                    { 
+                        cout << "popping..." << endl;
+                        checkings.pop_back();
+                    }
+                    else
+                    {
+                        //needs to return back to checkings submenu
+                        continue;
+                    }
+                   
                 }
+                else if (inChoice == 3)
+                {
+                    cout << "\nCHECKINGS\n";
+                    cout << "number of values in checkings is " << checkings.size() << endl;
+                    for (int i = 0;i<checkings.size(); i++) {
+                        cout << i+1 << ": ";
+                        checkings[i].printEntry();
+                    }
+                }
+                
+                else if (inChoice == 4)
+                { continue; }
+                else
+                { cout << "Invalid Input." << endl; }
+                
                 break;
             }
                 
@@ -99,21 +130,21 @@ int main(void)
             case 5 :
             {
                 cout << "\nCHECKINGS\n";
-                for (int i = NUMOFCHECKINGS-4;i<NUMOFCHECKINGS+1; i++) {
+                for (int i = checkings.size()-19;i<checkings.size(); i++) {
                     checkings[i].printEntry();
                 }
                 
                 cout << "\nSAVINGS\n";
-                for (int i = NUMOFSAVINGS-4;i<NUMOFSAVINGS+1; i++) {
+                for (int i = savings.size()-19;i<savings.size(); i++) {
                     savings[i].printEntry();
                 }
                 cout << "\nEXPENSES\n";
-                for (int i = NUMOFEXPENSES-4;i<NUMOFEXPENSES+1; i++) {
+                for (int i = expenses.size()-19;i<expenses.size(); i++) {
                     expenses[i].printEntry();
                 }
                 
                 cout << "\nSPECIALEXPENSES\n";
-                for (int i = NUMOFSPECIALEXPENSES-4;i<NUMOFSPECIALEXPENSES+1; i++) {
+                for (int i = specialExpenses.size()-9;i<specialExpenses.size(); i++) {
                     specialExpenses[i].printEntry();
                 }
                 break;
