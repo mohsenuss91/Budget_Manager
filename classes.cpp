@@ -25,12 +25,17 @@ static bool expensesChanged = false;
 static bool specialExpensesChanged = false;
 
 // 'Entry' functions
-
 void Entry::loadDate(std::string d){ //move inline
     date = d;
 }
 void Entry::loadAmount(float amnt){ //move inline
     amount = amnt;
+}
+std::string Entry::getDate(void){ //move inline
+    return date;
+}
+float Entry::getAmount(void){ //move inline
+    return amount;
 }
 void Entry::setDate(std::string d){
     unsigned int size = (int)d.length();
@@ -70,6 +75,198 @@ void Entry::setAmount(float amnt){
     amount = amnt;
 }
 
+
+
+// 'Profits' functions
+Profits::Profits(void){
+    amount = 0.0;
+    date = "00/00/00";
+}
+Profits::~Profits(){
+    //destructor;
+}
+void Profits::printEntry(void){
+        cout << setw(8) << date;
+        cout << " . . . $";
+        cout << fixed << setprecision(2) << setw(5) << amount << endl;
+}
+void Profits::printEntry(bool showDecimals){
+    cout << setw(8) << date;
+    cout << " . . . $";
+    if (!showDecimals)
+    { cout << setw(2) << amount << endl; }
+    else
+    { cout << fixed << setprecision(2) << amount << endl; }
+    
+}
+
+
+
+// 'Expenses' Functions
+Expenses::Expenses(void){
+    amount = 0.0;
+    date = "00/00/00";
+    reason = "NaNaNa";
+}
+Expenses::~Expenses(){
+    //destructor;
+}
+void Expenses::setReason(std::string rsn){
+    reason = rsn;
+}
+void Expenses::printEntry(void){
+    cout << left; // align left
+    cout << setw(8) << date;
+    cout << "   . .   $";
+    cout << fixed << setprecision(2) << setw(7) << amount;
+    cout << " . .   ";
+    cout << reason << endl;
+    cout << resetiosflags(std::ios::adjustfield); //realign right
+}
+
+
+
+// 'drawMainMenu' prints the main menu
+void drawMainMenu(void)
+{
+    cout << "\n\t\t***********************************\n"
+    "\t\t*                                 *\n"
+    "\t\t*   (Q) Quit                      *\n"
+    "\t\t*   (1) Add/View Checkings        *\n"
+    "\t\t*   (2) Add/View Savings          *\n"
+    "\t\t*   (3) Add/View Expenses         *\n"
+    "\t\t*   (4) Add/View Special Expenses *\n"
+    "\t\t*   (5) View Total Balances       *\n"
+    "\t\t*                                 *\n"
+    "\t\t***********************************\n";
+}
+
+void drawSubMenu(std::string category)
+{
+    cout << "\n\t\t*******************************\n"
+    "\t\t*                             *\n"\
+    "\t\t*   (1) Add Input             *\n"
+    "\t\t*   (2) Remove Input          *\n"
+    "\t\t*   (3) View All              *\n"
+    "\t\t*   (4) Return to main menu   *\n"
+    "\t\t*                             *\n"
+    "\t\t*******************************\n";
+    
+    cout << endl << "How will you modify " << category << ": ";
+}
+
+
+
+// 'loadProfits' will read inputted file and load values on to profits vector
+void loadProfits(std::string filename, std::vector<Profits> &inVector)
+{
+    std::string buffer(9, '\0');
+    std::ifstream inFile(filename);
+    if(!inFile)
+    {
+        cout << "Error opening file named \"" << filename << "\". Check if it exists.\n";
+        exit(2);
+    }
+    for (int i = 0; std::getline(inFile,buffer,'$'); i++)
+    // will read until getline fails and also reads in $ sign and skips it
+    {
+        
+        std::getline(inFile,buffer,',');
+        inVector[i].loadAmount(std::stod(buffer));
+        
+        std::getline(inFile,buffer,'\r');
+        inVector[i].loadDate(buffer);
+    }
+    inFile.close();
+}
+
+// 'loadExpense' will read inputted file and load values on to expenses vector
+void loadExpense(std::string filename, std::vector<Expenses> &inVector)
+{
+    std::string buffer(41, '\0');
+    std::ifstream inFile(filename);
+    if(!inFile)
+    {
+        cout << "Error opening file named \"" << filename << "\". Nothing will be loaded from it.\n";
+    }
+    for (int i = 0; std::getline(inFile,buffer,'$'); i++)
+        // will read until getline fails and also reads in $ sign and skips it
+    {
+        
+        std::getline(inFile,buffer,',');
+        inVector[i].loadAmount(std::stod(buffer));
+        std::getline(inFile,buffer,',');
+        inVector[i].setReason(buffer);
+        std::getline(inFile,buffer,'\r');
+        inVector[i].loadDate(buffer);
+    }
+    inFile.close();
+}
+
+// 'saveProfits' will write any changes in appropiate vector to the file
+void saveProfits(std::string filename, std::vector<Profits> &inVector)
+{
+    cout << "Saving " << filename << "... (not really)\n";
+    std::ofstream inFile(filename, ios::app);
+    if (!inFile)
+    {
+        cout << "Error opening file named \"" << filename << "\". New file will be made.\n";
+    }
+    inFile << '\r' << '$' << inVector[80].getAmount() << ',' << inVector[80].getDate();
+    inFile.close();
+    cout << "Saving " << filename << "... (for real! check!)\n";
+}
+
+// 'saveExpense' will write any changes in appropiate vector to the file
+void saveExpense(std::string filename, std::vector<Expenses> &inVector)
+{
+    cout << "Saving " << filename << "... (not really)\n";
+}
+
+// 'inputExpense' will get values from user and then append the entries to the vector.
+Expenses inputExpense(Expenses newInput)
+{
+    float inAmount;
+    string inDate(9, '\0');
+    string inReason(41, '\0');
+    
+    cout << "Give me the date: " ;
+    cin >> inDate;
+    newInput.setDate(inDate);
+    cout << "Give me the amount: $";
+    cin >> inAmount;
+    newInput.setAmount(inAmount);
+    cout << "Give me the reason (40 character limit): ";
+    cin.ignore();
+    getline (cin,inReason);
+    while (inReason.length() > 40)
+    {
+        cin.clear();
+        cout << "Try Again: ";
+        getline (cin,inReason);
+    }
+    newInput.setReason(inReason);
+    return newInput;
+}
+
+// 'inputProfit' will get values from user and then append the entries to the vector.
+Profits inputProfit(Profits newInput)
+{
+    float inAmount;
+    string inDate(9, '\0');
+    
+    cout << "Give me the date: " ;
+    cin >> inDate;
+    newInput.setDate(inDate);
+    cout << "Give me the amount: $";
+    cin >> inAmount;
+    newInput.setAmount(inAmount);
+    return newInput;
+}
+
+
+
+// 'setChanged' will flag passed in vector name as changed
 void setChanged(std::string vector)
 {
     if (vector == "Checkings")
@@ -80,14 +277,15 @@ void setChanged(std::string vector)
     
     else if (vector == "Expenses")
         expensesChanged = true;
-             
+    
     else if (vector == "Special Expenses")
         specialExpensesChanged = true;
-                      
+    
     else
         cout << "Unable to set " << vector << " to changed!\n\n";
 }
-             
+
+// 'isChanged' will return true if the passed in vector name has been flagged
 bool isChanged(std::string vector)
 {
     if (vector == "Checkings")
@@ -124,193 +322,6 @@ bool isChanged(std::string vector)
         return false;
     }
 }
-/*
- NOTE:
- numeric_limits<variable_type> returns limit that the variable can hold.
- adding ::max at the end ^ will return maximum limit.
- streamsize counts characters in a stream.
- effectivley ignoring every single character in the stream.
- cin.ignore takes a second parameter that mean stop if this character is
- found even if first parameter isnt met, so basically empties cin stream.
- */
-
-
-// 'Profits' functions
-Profits::Profits(void){
-    amount = 0.0;
-    date = "00/00/00";
-}
-Profits::~Profits(){
-    //destructor;
-}
-void Profits::printEntry(void){
-        cout << setw(8) << date;
-        cout << " . . . $";
-        cout << fixed << setprecision(2) << setw(5) << amount << endl;
-}
-void Profits::printEntry(bool showDecimals){
-    cout << setw(8) << date;
-    cout << " . . . $";
-    if (!showDecimals)
-    { cout << setw(2) << amount << endl; }
-    else
-    { cout << fixed << setprecision(2) << amount << endl; }
-    
-}
-void saveProfits(std::string filename, std::vector<Profits> &inVector)
-{
-    cout << "Saving " << filename << "... (not really)\n";
-}
-
-// 'Expenses' Functions
-Expenses::Expenses(void){
-    amount = 0.0;
-    date = "00/00/00";
-    reason = "NaNaNa";
-}
-Expenses::~Expenses(){
-    //destructor;
-}
-void Expenses::setReason(std::string rsn){
-    reason = rsn;
-}
-void Expenses::printEntry(void){
-    cout << setw(8) << date;
-    cout << " . . . $";
-    cout << fixed << setprecision(2) << setw(5) << amount;
-    cout << " . . . ";
-    cout << reason << endl;
-}
-void saveExpense(std::string filename, std::vector<Expenses> &inVector)
-{
-    cout << "Saving " << filename << "... (not really)\n";
-}
-
-// 'drawMainMenu' prints the main menu
-void drawMainMenu(void)
-{
-    cout << "\n\t\t***********************************\n"
-    "\t\t*                                 *\n"
-    "\t\t*   (Q) Quit                      *\n"
-    "\t\t*   (1) Add/View Checkings        *\n"
-    "\t\t*   (2) Add/View Savings          *\n"
-    "\t\t*   (3) Add/View Expenses         *\n"
-    "\t\t*   (4) Add/View Special Expenses *\n"
-    "\t\t*   (5) View Total Balances       *\n"
-    "\t\t*                                 *\n"
-    "\t\t***********************************\n";
-}
-
-void drawSubMenu(std::string category)
-{
-    cout << "\n\t\t*******************************\n"
-    "\t\t*                             *\n"\
-    "\t\t*   (1) Add Input             *\n"
-    "\t\t*   (2) Remove Input          *\n"
-    "\t\t*   (3) View All              *\n"
-    "\t\t*   (4) Return to main menu   *\n"
-    "\t\t*                             *\n"
-    "\t\t*******************************\n";
-    
-    cout << endl << "How will you modify " << category << ": ";
-}
-
-
-// 'loadExpense' will read inputted file and load values on to expenses vector
-void loadExpense(std::string filename, std::vector<Expenses> &inVector)
-{
-    std::string buffer(41, '\0');
-    std::ifstream inFile(filename);
-    if(!inFile)
-    {
-        cout << "Error opening file named \"" << filename << "\". Check if it exists.\n";
-        exit(2);
-    }
-    for (int i = 0; std::getline(inFile,buffer,'$'); i++)
-    // will read until getline fails and also reads in $ sign and skips it
-    {
-        
-        std::getline(inFile,buffer,',');
-        inVector[i].loadAmount(std::stod(buffer));
-        std::getline(inFile,buffer,',');
-        inVector[i].setReason(buffer);
-        std::getline(inFile,buffer,'\r');
-        inVector[i].loadDate(buffer);
-    }
-    inFile.close();
-}
-
-
-// 'loadProfits' will read inputted file and load values on to profits vector
-void loadProfits(std::string filename, std::vector<Profits> &inVector)
-{
-    std::string buffer(9, '\0');
-    std::ifstream inFile(filename);
-    if(!inFile)
-    {
-        cout << "Error opening file named \"" << filename << "\". Check if it exists.\n";
-        exit(2);
-    }
-    for (int i = 0; std::getline(inFile,buffer,'$'); i++)
-    // will read until getline fails and also reads in $ sign and skips it
-    {
-        
-        std::getline(inFile,buffer,',');
-        inVector[i].loadAmount(std::stod(buffer));
-        
-        std::getline(inFile,buffer,'\r');
-        inVector[i].loadDate(buffer);
-    }
-    inFile.close();
-}
-
-
-// 'inputExpense' will get values from user and then append the entries to the vector.
-Expenses inputExpense(Expenses newInput)
-{
-    float inAmount;
-    string inDate(9, '\0');
-    string inReason(41, '\0');
-    
-    cout << "Give me the date: " ;
-    cin >> inDate;
-    newInput.setDate(inDate);
-    cout << "Give me the amount: $";
-    cin >> inAmount;
-    newInput.setAmount(inAmount);
-    cout << "Give me the reason (40 character limit): ";
-    cin.ignore();
-    getline (cin,inReason);
-    while (inReason.length() > 40)
-    {
-        cin.clear();
-        cout << "Try Again: ";
-        getline (cin,inReason);
-    }
-    newInput.setReason(inReason);
-    return newInput;
-}
-
-
-// 'inputProfit' will get values from user and then append the entries to the vector.
-Profits inputProfit(Profits newInput)
-{
-    float inAmount;
-    string inDate(9, '\0');
-    
-    cout << "Give me the date: " ;
-    cin >> inDate;
-    newInput.setDate(inDate);
-    cout << "Give me the amount: $";
-    cin >> inAmount;
-    newInput.setAmount(inAmount);
-    return newInput;
-}
-
-
-
-
-
 
 
 

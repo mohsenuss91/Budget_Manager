@@ -22,6 +22,8 @@ protected:
 public:
     void setDate(std::string);
     void setAmount(float amnt);
+    std::string getDate(void);
+    float getAmount(void);
     void loadDate(std::string);
     void loadAmount(float amnt);
 };

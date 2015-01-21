@@ -11,10 +11,9 @@
 
             /********************************************************************************
                                                     ToDo
-             Intialize vectors with right amount dynamically
-             Implement view function to show only 10 lines per viewing but allow manual input.
-             Implement save function.
-             Fix output screen.
+             Find a way to initialize the correct size of each vector on startup
+             Implement save(write) function.
+             Implement view function that allows manual input.
             **********************************************************************************/
 
 #include <iostream>
@@ -28,17 +27,18 @@ using namespace std;
 
 int main(void)
 {
-    // initialize variables needed for program
+    // variables needed to initialize right amount of entries at startup
+    /* TODO: Find a way to initialize the correct size of each vector on startup */
     const int NUMOFEXPENSES = 432;
     const int NUMOFSPECIALEXPENSES = 11;
     const int NUMOFCHECKINGS = 313;
     const int NUMOFSAVINGS = 80;
+    
+    // initialize vector's needed to store all inputs
     vector<Profits> checkings(NUMOFCHECKINGS);
     vector<Profits> savings(NUMOFSAVINGS);
     vector<Expenses> expenses(NUMOFEXPENSES);
     vector<Expenses> specialExpenses(NUMOFSPECIALEXPENSES);
-    unsigned int inChoice;
-    char inChar;
     
     // loads files into memory
     loadProfits("data/checkings.csv", checkings);
@@ -46,8 +46,9 @@ int main(void)
     loadExpense("data/expenses.csv", expenses);
     loadExpense("data/specialexpenses.csv", specialExpenses);
     
-    
-    
+    // initialize variables needed to run menu's
+    unsigned int inChoice;
+    char inChar;
     
     
     do
@@ -329,17 +330,25 @@ int main(void)
             {
                 cout << endl;
                 
-                // Checks if isChanged flag is true and saves if it is
-                if(isChanged("Checkings"))
-                    saveProfits("data/checkings.csv", checkings);
-                if(isChanged("Savings"))
-                    saveProfits("data/savings.csv", savings);
-                if(isChanged("Expenses"))
-                    saveExpense("data/expenses.csv", expenses);
-                if(isChanged("Special Expenses"))
-                    saveExpense("data/specialexpenses.csv", specialExpenses);
+                if(!isChanged("Checkings") && !isChanged("Savings")
+                 && !isChanged("Expenses") && !isChanged("Special Expenses"))
+                {
+                    cout << "Nothing to save...\n";
+                }
+                else
+                {
+                    // Checks if isChanged flag is true and saves if it is
+                    if(isChanged("Checkings"))
+                        saveProfits("data/checkings.csv", checkings);
+                    if(isChanged("Savings"))
+                        saveProfits("data/savings.csv", savings);
+                    if(isChanged("Expenses"))
+                        saveExpense("data/expenses.csv", expenses);
+                    if(isChanged("Special Expenses"))
+                        saveExpense("data/specialexpenses.csv", specialExpenses);
+                }
                 
-                cout << "Quitting...\n";
+                cout << "Quitting...\n\n";
                 break;
             }
                 
