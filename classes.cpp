@@ -87,6 +87,16 @@ void Profits::printEntry(void){
         cout << " . . . $";
         cout << fixed << setprecision(2) << amount << endl;
 }
+void Profits::printEntry(bool showDecimals){
+    cout << date;
+    cout << " . . . $";
+    if (!showDecimals)
+    { cout << amount << endl; }
+    else
+    { cout << fixed << setprecision(2) << amount << endl; }
+    
+}
+
 
 
 // 'Expenses' Functions
@@ -141,7 +151,7 @@ void drawSubMenu(std::string category)
 
 
 // 'loadExpense' will read inputted file and load values on to expenses vector
-void loadExpense(std::string filename, std::vector<Expenses> &inVector,int size)
+void loadExpense(std::string filename, std::vector<Expenses> &inVector)
 {
     std::string buffer(41, '\0');
     std::ifstream inFile(filename);
@@ -150,9 +160,9 @@ void loadExpense(std::string filename, std::vector<Expenses> &inVector,int size)
         cout << "Error opening file named \"" << filename << "\". Check if it exists.\n";
         exit(2);
     }
-    for (int i = 0; i < size; i++)
+    for (int i = 0; std::getline(inFile,buffer,'$'); i++)
     {
-        std::getline(inFile,buffer,'$'); //skip dollar sign
+        //std::getline(inFile,buffer,'$'); //skip dollar sign
         
         std::getline(inFile,buffer,',');
         inVector[i].loadAmount(std::stod(buffer));
@@ -166,7 +176,7 @@ void loadExpense(std::string filename, std::vector<Expenses> &inVector,int size)
 
 
 // 'loadProfits' will read inputted file and load values on to profits vector
-void loadProfits(std::string filename, std::vector<Profits> &inVector,int size)
+void loadProfits(std::string filename, std::vector<Profits> &inVector)
 {
     std::string buffer(9, '\0');
     std::ifstream inFile(filename);
@@ -175,15 +185,15 @@ void loadProfits(std::string filename, std::vector<Profits> &inVector,int size)
         cout << "Error opening file named \"" << filename << "\". Check if it exists.\n";
         exit(2);
     }
-    for (int i = 0; i < size; i++)
+    for (int i = 0; std::getline(inFile,buffer,'$'); i++)
     {
+        //std::getline(inFile,buffer,'$');//skip dollar sign
+        
         std::getline(inFile,buffer,',');
-        inVector[i].loadDate(buffer);
-        
-        std::getline(inFile,buffer,'$');//skip dollar sign
-        
-        std::getline(inFile,buffer,'\n');
         inVector[i].loadAmount(std::stod(buffer));
+        
+        std::getline(inFile,buffer,'\r');
+        inVector[i].loadDate(buffer);
     }
     inFile.close();
 }

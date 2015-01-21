@@ -31,6 +31,7 @@ public:
     Profits(void);
     ~Profits(void);
     void printEntry(void);
+    void printEntry(bool);
 };
 
 class Expenses : public Entry{
@@ -48,6 +49,6 @@ void drawSubMenu(std::string);
 Expenses inputExpense(Expenses);
 Profits inputProfit(Profits);
 
-void loadExpense(std::string, std::vector<Expenses>&, int);
-void loadProfits(std::string, std::vector<Profits>&, int);
+void loadExpense(std::string, std::vector<Expenses>&);
+void loadProfits(std::string, std::vector<Profits>&);
 #endif
