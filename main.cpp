@@ -11,12 +11,8 @@
 
             /********************************************************************************
                                                     ToDo
-             ?? Read and check first line for numbers of entries ??
-             Add submenu to 4 main options.
-             signal change has occured to write changes when closing.
-             ?? Increase number of entries value ??
+             Intialize vectors with right amount dynamically
              Implement view function to show only 10 lines per viewing but allow manual input.
-             implement view all function.
              Implement save function.
              Fix output screen.
             **********************************************************************************/
@@ -25,6 +21,7 @@
 #include <cstdlib> //include for exit()
 #include <limits> //include for numeric_limits
 #include <vector> //include for vector arrays
+#include <iomanip> //include for cout formatting
 #include "classes.h" //include for classes
 
 using namespace std;
@@ -44,10 +41,11 @@ int main(void)
     char inChar;
     
     // loads files into memory
-    loadExpense("data/expenses.csv", expenses);
-    loadExpense("data/specialexpenses.csv", specialExpenses);
     loadProfits("data/checkings.csv", checkings);
     loadProfits("data/savings.csv", savings);
+    loadExpense("data/expenses.csv", expenses);
+    loadExpense("data/specialexpenses.csv", specialExpenses);
+    
     
     
     
@@ -60,7 +58,7 @@ int main(void)
         cin >> inChoice;
         switch (inChoice)
         {
-            // Option #1
+            // Option #1 - Brings up editing menu for Checkings
             case 1 :
             {
                 inChoice = 0;
@@ -73,6 +71,8 @@ int main(void)
                         {
                             static Profits newInput;
                             checkings.push_back( inputProfit(newInput) );
+                            setChanged("Checkings");
+                            
                         }
                         else if (inChoice == 2)
                         {
@@ -85,6 +85,7 @@ int main(void)
                                 {
                                     cout << "Removing last entry..." << endl;
                                     checkings.pop_back();
+                                    setChanged("Checkings");
                                 }
                                 else
                                 {
@@ -100,8 +101,9 @@ int main(void)
                         else if (inChoice == 3)
                         {
                             cout << "\nCHECKINGS\n";
-                            for (int i = 0; i < checkings.size(); i++) {
-                                cout << i+1 << ": ";
+                            for (int i = 0; i < checkings.size(); i++)
+                            {
+                                cout << setw(3) << i+1 << ": ";
                                 checkings[i].printEntry(false);
                             }
                         }
@@ -115,7 +117,7 @@ int main(void)
                     break;
             }
             
-            // Option #2
+            // Option #2 - Brings up editing menu for Savings
             case 2 :
             {
                 inChoice = 0;
@@ -128,6 +130,7 @@ int main(void)
                         {
                             static Profits newInput;
                             savings.push_back( inputProfit(newInput) );
+                            setChanged("Savings");
                         }
                         else if (inChoice == 2)
                         {
@@ -140,6 +143,7 @@ int main(void)
                                 {
                                     cout << "Removing last entry..." << endl;
                                     savings.pop_back();
+                                    setChanged("Savings");
                                 }
                                 else
                                 {
@@ -155,8 +159,9 @@ int main(void)
                         else if (inChoice == 3)
                         {
                             cout << "\nSAVINGS\n";
-                            for (int i = 0; i < savings.size(); i++) {
-                                cout << i+1 << ": ";
+                            for (int i = 0; i < savings.size(); i++)
+                            {
+                                cout << setw(2) << i+1 << ": ";
                                 savings[i].printEntry();
                             }
                         }
@@ -170,19 +175,21 @@ int main(void)
                 break;
             }
             
-            // Option #3
+            // Option #3 - Brings up editing menu for Expenses
             case 3 :
             {
                 inChoice = 0;
                     while (inChoice != 4)
                     {
                         drawSubMenu("Expenses");
-                        cin.clear(); cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                        
                         cin >> inChoice;
+                        cin.clear(); cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                         if(inChoice == 1)
                         {
                             static Expenses newExpense;
                             expenses.push_back( inputExpense(newExpense) );
+                            setChanged("Expenses");
                         }
                         else if (inChoice == 2)
                         {
@@ -195,6 +202,7 @@ int main(void)
                                 {
                                     cout << "Removing last entry..." << endl;
                                     expenses.pop_back();
+                                    setChanged("Expenses");
                                 }
                                 else
                                 {
@@ -210,8 +218,9 @@ int main(void)
                         else if (inChoice == 3)
                         {
                             cout << "\nEXPENSES\n";
-                            for (int i = 0; i < expenses.size(); i++) {
-                                cout << i+1 << ": ";
+                            for (int i = 0; i < expenses.size(); i++)
+                            {
+                                cout << setw(3) << i+1 << ": ";
                                 expenses[i].printEntry();
                             }
                         }
@@ -225,20 +234,20 @@ int main(void)
                 break;
             }
                 
-             // Option #4
+             // Option #4 - Brings up editing menu for Special Expenses
             case 4 :
             {
                 inChoice = 0;
                     while (inChoice != 4)
                     {
                         drawSubMenu("Special Expenses");
-                        cin.clear(); cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                        //FIX: ignores input after entering new data for expense and special epxense
                         cin >> inChoice;
+                        cin.clear(); cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                         if(inChoice == 1)
                         {
                             static Expenses newExpense;
                             specialExpenses.push_back( inputExpense(newExpense) );
+                            setChanged("Special Expenses");
                         }
                         else if (inChoice == 2)
                         {
@@ -251,6 +260,7 @@ int main(void)
                                 {
                                     cout << "Removing last entry..." << endl;
                                     specialExpenses.pop_back();
+                                    setChanged("Special Expenses");
                                 }
                                 else
                                 {
@@ -266,8 +276,9 @@ int main(void)
                         else if (inChoice == 3)
                         {
                             cout << "\nSPECIAL EXPENSES\n";
-                            for (int i = 0; i < specialExpenses.size(); i++) {
-                                cout << i+1 << ": ";
+                            for (int i = 0; i < specialExpenses.size(); i++)
+                            {
+                                cout << setw(2) << i+1 << ": ";
                                 specialExpenses[i].printEntry();
                             }
                         }
@@ -281,39 +292,59 @@ int main(void)
                 break;
             }
                 
-             // Option #5
+             // Option #5 - Views last 20 inputs of all vectors
             case 5 :
             {
                 cout << "\nCHECKINGS\n";
-                for (int i = checkings.size()-19;i<checkings.size(); i++) {
+                for (int i = checkings.size()-20;i<checkings.size(); i++) {
+                    cout << setw(3) << i+1 << ": ";
                     checkings[i].printEntry(false);
                 }
                 
                 cout << "\nSAVINGS\n";
-                for (int i = savings.size()-19;i<savings.size(); i++) {
+                for (int i = savings.size()-20;i<savings.size(); i++) {
+                    cout << setw(2) << i+1 << ": ";
                     savings[i].printEntry();
                 }
                 cout << "\nEXPENSES\n";
-                for (int i = expenses.size()-19;i<expenses.size(); i++) {
+                for (int i = expenses.size()-20;i<expenses.size(); i++) {
+                    cout << setw(3) << i+1 << ": ";
                     expenses[i].printEntry();
                 }
                 
                 cout << "\nSPECIALEXPENSES\n";
-                for (int i = specialExpenses.size()-9;i<specialExpenses.size(); i++) {
+                for (int i = specialExpenses.size()-8;i<specialExpenses.size(); i++) {
+                    cout << setw(2) << i+1 << ": ";
                     specialExpenses[i].printEntry();
                 }
                 
                 cin.ignore();
                 cout << endl << "Press [ENTER] to continue...";
-                cin.get();
+                cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                 break;
             }
             
-            // Other Options
-            case 113 : {}
-            case 81 : {exit(EXIT_SUCCESS);} // Quits for 'Q' or 'q' entry
-            case 0 : {}
-            default : {break;}// Retries for invalid or 0 entry
+            // Quit Option - Saves and Quits
+            case 0 :
+            {
+                cout << endl;
+                
+                // Checks if isChanged flag is true and saves if it is
+                if(isChanged("Checkings"))
+                    saveProfits("data/checkings.csv", checkings);
+                if(isChanged("Savings"))
+                    saveProfits("data/savings.csv", savings);
+                if(isChanged("Expenses"))
+                    saveExpense("data/expenses.csv", expenses);
+                if(isChanged("Special Expenses"))
+                    saveExpense("data/specialexpenses.csv", specialExpenses);
+                
+                cout << "Quitting...\n";
+                break;
+            }
+                
+            // Default option - Retries for invalid int input
+            default : {cout << "Incorrect option...\n"; break;}
         }
     }
     while (inChoice != 0);

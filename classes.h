@@ -14,11 +14,11 @@
 #include <iomanip> //include for setting decimal precision
 #include <vector>
 
+// Entry - Parent Class
 class Entry{
 protected:
     float amount;
     std::string date;
-    bool isChanged;
 public:
     void setDate(std::string);
     void setAmount(float amnt);
@@ -26,6 +26,7 @@ public:
     void loadAmount(float amnt);
 };
 
+// Profits - Child Class
 class Profits : public Entry{
 public:
     Profits(void);
@@ -34,7 +35,9 @@ public:
     void printEntry(bool);
 };
 
+// Expenses - Child Class
 class Expenses : public Entry{
+private:
     std::string reason;
 public:
     Expenses(void);
@@ -43,12 +46,18 @@ public:
     void printEntry(void);
 };
 
+//Functions
 void drawMainMenu(void);
 void drawSubMenu(std::string);
 
 Expenses inputExpense(Expenses);
 Profits inputProfit(Profits);
 
+void setChanged(std::string);
+bool isChanged(std::string);
+
 void loadExpense(std::string, std::vector<Expenses>&);
 void loadProfits(std::string, std::vector<Profits>&);
+void saveProfits(std::string, std::vector<Profits>&);
+void saveExpense(std::string, std::vector<Expenses>&);
 #endif

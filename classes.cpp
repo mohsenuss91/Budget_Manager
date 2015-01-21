@@ -18,6 +18,12 @@
 
 using namespace std;
 
+
+static bool checkingsChanged = false;
+static bool savingsChanged = false;
+static bool expensesChanged = false;
+static bool specialExpensesChanged = false;
+
 // 'Entry' functions
 
 void Entry::loadDate(std::string d){ //move inline
@@ -63,6 +69,61 @@ void Entry::setAmount(float amnt){
     amnt = buf / 100.0;
     amount = amnt;
 }
+
+void setChanged(std::string vector)
+{
+    if (vector == "Checkings")
+        checkingsChanged = true;
+    
+    else if (vector == "Savings")
+        savingsChanged = true;
+    
+    else if (vector == "Expenses")
+        expensesChanged = true;
+             
+    else if (vector == "Special Expenses")
+        specialExpensesChanged = true;
+                      
+    else
+        cout << "Unable to set " << vector << " to changed!\n\n";
+}
+             
+bool isChanged(std::string vector)
+{
+    if (vector == "Checkings")
+    {
+        if(checkingsChanged)
+            return true;
+        else
+            return false;
+    }
+    else if (vector == "Savings")
+    {
+        if(savingsChanged)
+            return true;
+        else
+            return false;
+    }
+    else if (vector == "Expenses")
+    {
+        if(expensesChanged)
+            return true;
+        else
+            return false;
+    }
+    else if (vector == "Special Expenses")
+    {
+        if (specialExpensesChanged)
+            return true;
+        else
+            return false;
+    }
+    else
+    {
+        cout << "Unable to find " << vector << "!\n\n";
+        return false;
+    }
+}
 /*
  NOTE:
  numeric_limits<variable_type> returns limit that the variable can hold.
@@ -83,21 +144,23 @@ Profits::~Profits(){
     //destructor;
 }
 void Profits::printEntry(void){
-        cout << date;
+        cout << setw(8) << date;
         cout << " . . . $";
-        cout << fixed << setprecision(2) << amount << endl;
+        cout << fixed << setprecision(2) << setw(5) << amount << endl;
 }
 void Profits::printEntry(bool showDecimals){
-    cout << date;
+    cout << setw(8) << date;
     cout << " . . . $";
     if (!showDecimals)
-    { cout << amount << endl; }
+    { cout << setw(2) << amount << endl; }
     else
     { cout << fixed << setprecision(2) << amount << endl; }
     
 }
-
-
+void saveProfits(std::string filename, std::vector<Profits> &inVector)
+{
+    cout << "Saving " << filename << "... (not really)\n";
+}
 
 // 'Expenses' Functions
 Expenses::Expenses(void){
@@ -112,13 +175,16 @@ void Expenses::setReason(std::string rsn){
     reason = rsn;
 }
 void Expenses::printEntry(void){
-    cout << date;
+    cout << setw(8) << date;
     cout << " . . . $";
-    cout << fixed << setprecision(2) << amount;
+    cout << fixed << setprecision(2) << setw(5) << amount;
     cout << " . . . ";
     cout << reason << endl;
 }
-
+void saveExpense(std::string filename, std::vector<Expenses> &inVector)
+{
+    cout << "Saving " << filename << "... (not really)\n";
+}
 
 // 'drawMainMenu' prints the main menu
 void drawMainMenu(void)
@@ -161,8 +227,8 @@ void loadExpense(std::string filename, std::vector<Expenses> &inVector)
         exit(2);
     }
     for (int i = 0; std::getline(inFile,buffer,'$'); i++)
+    // will read until getline fails and also reads in $ sign and skips it
     {
-        //std::getline(inFile,buffer,'$'); //skip dollar sign
         
         std::getline(inFile,buffer,',');
         inVector[i].loadAmount(std::stod(buffer));
@@ -186,8 +252,8 @@ void loadProfits(std::string filename, std::vector<Profits> &inVector)
         exit(2);
     }
     for (int i = 0; std::getline(inFile,buffer,'$'); i++)
+    // will read until getline fails and also reads in $ sign and skips it
     {
-        //std::getline(inFile,buffer,'$');//skip dollar sign
         
         std::getline(inFile,buffer,',');
         inVector[i].loadAmount(std::stod(buffer));
