@@ -12,7 +12,8 @@
             /********************************************************************************
                                                     ToDo
              Find a way to initialize the correct size of each vector on startup
-             Implement save(write) function.
+             
+             Fix write: NOT TAKING INTO ACCOUNT REMOVAL WAS DONE N THEN VALUE WAS ADDED
              Implement view function that allows manual input.
             **********************************************************************************/
 
@@ -339,13 +340,13 @@ int main(void)
                 {
                     // Checks if isChanged flag is true and saves if it is
                     if(isChanged("Checkings"))
-                        saveProfits("data/checkings.csv", checkings);
+                        saveProfits(NUMOFCHECKINGS, "data/checkings.csv", checkings);
                     if(isChanged("Savings"))
-                        saveProfits("data/savings.csv", savings);
+                        saveProfits(NUMOFSAVINGS, "data/savings.csv", savings);
                     if(isChanged("Expenses"))
-                        saveExpense("data/expenses.csv", expenses);
+                        saveExpense(NUMOFEXPENSES, "data/expenses.csv", expenses);
                     if(isChanged("Special Expenses"))
-                        saveExpense("data/specialexpenses.csv", specialExpenses);
+                        saveExpense(NUMOFSPECIALEXPENSES, "data/specialexpenses.csv", specialExpenses);
                 }
                 
                 cout << "Quitting...\n\n";

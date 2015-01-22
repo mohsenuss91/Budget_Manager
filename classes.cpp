@@ -14,6 +14,7 @@
 #include <string> //include for string
 #include <cstdlib> //include for exit()
 #include <cctype> //include for isdigit
+#include <cstdio>
 #include "classes.h" //include for classes
 
 using namespace std;
@@ -114,6 +115,9 @@ Expenses::~Expenses(){
 void Expenses::setReason(std::string rsn){
     reason = rsn;
 }
+std::string Expenses::getReason(void){
+    return reason;
+}
 void Expenses::printEntry(void){
     cout << left; // align left
     cout << setw(8) << date;
@@ -204,23 +208,91 @@ void loadExpense(std::string filename, std::vector<Expenses> &inVector)
 }
 
 // 'saveProfits' will write any changes in appropiate vector to the file
-void saveProfits(std::string filename, std::vector<Profits> &inVector)
+void saveProfits(int initialValues, std::string filename, std::vector<Profits> &inVector)
 {
-    cout << "Saving " << filename << "... (not really)\n";
+    //opens the file and does error checking
     std::ofstream inFile(filename, ios::app);
     if (!inFile)
     {
         cout << "Error opening file named \"" << filename << "\". New file will be made.\n";
     }
-    inFile << '\r' << '$' << inVector[80].getAmount() << ',' << inVector[80].getDate();
-    inFile.close();
-    cout << "Saving " << filename << "... (for real! check!)\n";
+    
+    
+    //checks if values were added or subtracted and either appends or writes new file as a result
+    if(inVector.size() > initialValues)
+    {
+        cout << "Writing changes to " << filename << "...\n";
+        for (int i = initialValues; i < inVector.size(); i++)
+            inFile << '\r' << '$' << inVector[i].getAmount() << ',' << inVector[i].getDate();
+        inFile.close();
+    }
+    else
+    {
+        //create a new file to rewrite file without the deleted entries
+        std::string newFilename = filename + ".new";
+        std::fstream newFile(newFilename, std::ios::out);
+        
+        cout << "Deleting changes to " << filename << "...\n";
+        
+        //write the first entry without a newline and with a newline inside the for loop
+        newFile << '$' << inVector[0].getAmount() << ',' << inVector[0].getDate();
+        for (int i = 1; i < inVector.size(); i++)
+        {
+            newFile << '\r' << '$' << inVector[i].getAmount() << ',' << inVector[i].getDate();
+        }
+        
+        //close all files
+        inFile.close();
+        newFile.close();
+        
+        //erase original file and rename new file to original file
+        remove( filename.c_str() );
+        rename( newFilename.c_str(), filename.c_str() );
+    }
+    
+    
 }
 
 // 'saveExpense' will write any changes in appropiate vector to the file
-void saveExpense(std::string filename, std::vector<Expenses> &inVector)
+void saveExpense(int initialValues, std::string filename, std::vector<Expenses> &inVector)
 {
-    cout << "Saving " << filename << "... (not really)\n";
+    std::ofstream inFile(filename, ios::app);
+    
+    if (!inFile)
+    {cout << "Error opening file named \"" << filename << "\". New file will be made.\n";}
+    
+    
+    //checks if values were added or subtracted and either appends or writes new file as a result
+    if(inVector.size() > initialValues)
+    {
+        cout << "Writing changes to " << filename << "...\n";
+        for (int i = initialValues; i < inVector.size(); i++)
+        { inFile << '\r' << '$' << inVector[i].getAmount() << ',' << inVector[0].getReason() << ',' << inVector[i].getDate(); }
+        inFile.close();
+    }
+    else
+    {
+        //create a new file to rewrite file without the deleted entries
+        std::string newFilename = filename + ".new";
+        std::fstream newFile(newFilename, std::ios::out);
+        
+        cout << "Deleting changes to " << filename << "...\n";
+        
+        //write the first entry without a newline and with a newline inside the for loop
+        newFile << '$' << inVector[0].getAmount() << ',' << inVector[0].getReason() << ',' << inVector[0].getDate();
+        for (int i = 1; i < inVector.size(); i++)
+        {
+            newFile << '$' << inVector[0].getAmount() << ',' << inVector[0].getReason() << ',' << inVector[0].getDate();
+        }
+        
+        //close all files
+        inFile.close();
+        newFile.close();
+        
+        //erase original file and rename new file to original file
+        remove( filename.c_str() );
+        rename( newFilename.c_str(), filename.c_str() );
+    }
 }
 
 // 'inputExpense' will get values from user and then append the entries to the vector.

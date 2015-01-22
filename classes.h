@@ -44,6 +44,7 @@ private:
 public:
     Expenses(void);
     ~Expenses(void);
+    std::string getReason(void);
     void setReason(std::string);
     void printEntry(void);
 };
@@ -60,6 +61,6 @@ bool isChanged(std::string);
 
 void loadExpense(std::string, std::vector<Expenses>&);
 void loadProfits(std::string, std::vector<Profits>&);
-void saveProfits(std::string, std::vector<Profits>&);
-void saveExpense(std::string, std::vector<Expenses>&);
+void saveProfits(int, std::string, std::vector<Profits>&);
+void saveExpense(int, std::string, std::vector<Expenses>&);
 #endif
