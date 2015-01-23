@@ -33,38 +33,21 @@ public:
     void printEntry(bool isExpense = false);
 };
 
-// Profits - Child Class
-class Profits : public Entry{
-public:
-    Profits(void);
-    ~Profits(void);
-    void printEntry(bool showDecimals = true);
-};
 
-// Expenses - Child Class
-class Expenses : public Entry{
-private:
-    
-public:
-    Expenses(void);
-    ~Expenses(void);
-    
-    void printEntry(void);
-};
 
 //Functions
 void drawMainMenu(void);
 void drawSubMenu(std::string);
 
-Expenses inputExpense(Expenses);
-Profits inputProfit(Profits);
+Entry inputExpense(Entry);
+Entry inputProfit(Entry);
 
 int getAmountOfValues(std::string);
 void setChanged(std::string, bool deleteDone = false);
 bool isChanged(std::string);
 
 void loadExpense(std::string, std::vector<Entry>&);
-void loadProfits(std::string, std::vector<Profits>&);
-void saveProfits(int, std::string, std::vector<Profits>&);
+void loadProfits(std::string, std::vector<Entry>&);
+void saveProfits(int, std::string, std::vector<Entry>&);
 void saveExpense(int, std::string, std::vector<Entry>&);
 #endif

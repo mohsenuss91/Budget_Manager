@@ -29,12 +29,12 @@ static bool deleteWasDone = false;
 // 'Entry' functions
 Entry::Entry(bool isExpense)
 {
+    isExpense=1;
     amount = 0.0;
     date = "00/00/00";
     if(isExpense)
     {
-        reason = new string;
-        *reason = "NaNaNa";
+        //
     }
 }
 void Entry::loadDate(std::string d){ //move inline
@@ -97,6 +97,8 @@ void Entry::printEntry(bool isExpense){
     cout << " . .   ";
     cout << *reason << endl;
     }
+    else
+        cout << endl;
     cout << resetiosflags(std::ios::adjustfield); //realign right
 }
 
@@ -104,54 +106,18 @@ void Entry::printEntry(bool isExpense){
 
 
 
-
-// 'Profits' functions
-Profits::Profits(void){
-    amount = 0.0;
-    date = "00/00/00";
-}
-Profits::~Profits(){
-    //destructor;
-}
-void Profits::printEntry(bool showDecimals){
-    cout << setw(8) << date;
-    cout << " . . . $";
-    
-    if (showDecimals)
-    { cout << fixed << setprecision(2) << setw(5) << amount << endl; }
-    else
-    { cout << setw(2) << amount << endl; }
-    
-}
-
-
-
-// 'Expenses' Functions
-Expenses::Expenses(void){
-    amount = 0.0;
-    date = "00/00/00";
-    reason = new string;
-    *reason = "NaNaNa";
-}
-Expenses::~Expenses(){
-    delete reason;
-    //destructor;
-}
 void Entry::setReason(std::string rsn){
+    if(!reason)
+    {
+        reason = new string;
+        *reason = "NaNaNa";
+    }
     *reason = rsn;
 }
 std::string Entry::getReason(void){
     return *reason;
 }
-void Expenses::printEntry(void){
-    cout << left; // align left
-    cout << setw(8) << date;
-    cout << "   . .   $";
-    cout << fixed << setprecision(2) << setw(7) << amount;
-    cout << " . .   ";
-    cout << *reason << endl;
-    cout << resetiosflags(std::ios::adjustfield); //realign right
-}
+
 
 
 
@@ -187,7 +153,7 @@ void drawSubMenu(std::string category)
 
 
 // 'loadProfits' will read inputted file and load values on to profits vector
-void loadProfits(std::string filename, std::vector<Profits> &inVector)
+void loadProfits(std::string filename, std::vector<Entry> &inVector)
 {
     std::string buffer(9, '\0');
     std::ifstream inFile(filename);
@@ -233,7 +199,7 @@ void loadExpense(std::string filename, std::vector<Entry> &inVector)
 }
 
 // 'saveProfits' will write any changes in appropiate vector to the file
-void saveProfits(int initialValues, std::string filename, std::vector<Profits> &inVector)
+void saveProfits(int initialValues, std::string filename, std::vector<Entry> &inVector)
 {
     //opens the file and does error checking
     std::ofstream inFile(filename, ios::app);
@@ -321,7 +287,7 @@ void saveExpense(int initialValues, std::string filename, std::vector<Entry> &in
 }
 
 // 'inputExpense' will get values from user and then append the entries to the vector.
-Expenses inputExpense(Expenses newInput)
+Entry inputExpense(Entry newInput)
 {
     float inAmount;
     string inDate(9, '\0');
@@ -347,7 +313,7 @@ Expenses inputExpense(Expenses newInput)
 }
 
 // 'inputProfit' will get values from user and then append the entries to the vector.
-Profits inputProfit(Profits newInput)
+Entry inputProfit(Entry newInput)
 {
     float inAmount;
     string inDate(9, '\0');

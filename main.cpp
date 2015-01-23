@@ -34,12 +34,10 @@ int main(void)
     const int NUMOFSPECIALEXPENSES = getAmountOfValues("data/specialexpenses.csv");
     
     // initialize vector's needed to store all inputs
-    vector<Profits> checkings(NUMOFCHECKINGS);
-    vector<Profits> savings(NUMOFSAVINGS);
-    vector<Entry> expenses(true);
-    expenses.resize(NUMOFEXPENSES);
-    vector<Entry> specialExpenses(true);
-    specialExpenses.resize(NUMOFSPECIALEXPENSES);
+    vector<Entry> checkings(NUMOFCHECKINGS);
+    vector<Entry> savings(NUMOFSAVINGS);
+    vector<Entry> expenses(NUMOFEXPENSES);
+    vector<Entry> specialExpenses(NUMOFSPECIALEXPENSES);
     
     // loads files into memory
     loadProfits("data/checkings.csv", checkings);
@@ -71,7 +69,7 @@ int main(void)
                         cin >> inChoice;
                         if(inChoice == 1)
                         {
-                            static Profits newInput;
+                            static Entry newInput;
                             checkings.push_back( inputProfit(newInput) );
                             setChanged("Checkings");
                             
@@ -130,7 +128,7 @@ int main(void)
                         cin >> inChoice;
                         if(inChoice == 1)
                         {
-                            static Profits newInput;
+                            static Entry newInput;
                             savings.push_back( inputProfit(newInput) );
                             setChanged("Savings");
                         }
@@ -189,7 +187,7 @@ int main(void)
                         cin.clear(); cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                         if(inChoice == 1)
                         {
-                            static Expenses newExpense;
+                            static Entry newExpense;
                             expenses.push_back( inputExpense(newExpense) );
                             setChanged("Expenses");
                         }
@@ -223,7 +221,7 @@ int main(void)
                             for (int i = 0; i < expenses.size(); i++)
                             {
                                 cout << setw(3) << i+1 << ": ";
-                                expenses[i].printEntry();
+                                expenses[i].printEntry(true);
                             }
                         }
                         
@@ -247,7 +245,7 @@ int main(void)
                         cin.clear(); cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                         if(inChoice == 1)
                         {
-                            static Expenses newExpense;
+                            static Entry newExpense;
                             specialExpenses.push_back( inputExpense(newExpense) );
                             setChanged("Special Expenses");
                         }
@@ -281,7 +279,7 @@ int main(void)
                             for (int i = 0; i < specialExpenses.size(); i++)
                             {
                                 cout << setw(2) << i+1 << ": ";
-                                specialExpenses[i].printEntry();
+                                specialExpenses[i].printEntry(true);
                             }
                         }
                         
@@ -311,13 +309,13 @@ int main(void)
                 cout << "\nEXPENSES\n";
                 for (int i = expenses.size()-20;i<expenses.size(); i++) {
                     cout << setw(3) << i+1 << ": ";
-                    expenses[i].printEntry();
+                    expenses[i].printEntry(true);
                 }
                 
                 cout << "\nSPECIALEXPENSES\n";
                 for (int i = specialExpenses.size()-8;i<specialExpenses.size(); i++) {
                     cout << setw(2) << i+1 << ": ";
-                    specialExpenses[i].printEntry();
+                    specialExpenses[i].printEntry(true);
                 }
                 
                 cin.ignore();
