@@ -27,6 +27,16 @@ static bool specialExpensesChanged = false;
 static bool deleteWasDone = false;
 
 // 'Entry' functions
+Entry::Entry(bool isExpense)
+{
+    amount = 0.0;
+    date = "00/00/00";
+    if(isExpense)
+    {
+        reason = new string;
+        *reason = "NaNaNa";
+    }
+}
 void Entry::loadDate(std::string d){ //move inline
     date = d;
 }
@@ -68,7 +78,7 @@ void Entry::setAmount(float amnt){
     while(amnt == 0)
     {
         cin.clear();
-        cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // check note
+        cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         cout << "Try Again: $";
         cin >> amnt;
     }
@@ -76,6 +86,22 @@ void Entry::setAmount(float amnt){
     amnt = buf / 100.0;
     amount = amnt;
 }
+
+void Entry::printEntry(bool isExpense){
+    cout << left; // align left
+    cout << date;
+    cout << "   . .   $";
+    cout << fixed << setprecision(2)  << amount;
+    if(isExpense)
+    {
+    cout << " . .   ";
+    cout << *reason << endl;
+    }
+    cout << resetiosflags(std::ios::adjustfield); //realign right
+}
+
+
+
 
 
 
@@ -90,6 +116,7 @@ Profits::~Profits(){
 void Profits::printEntry(bool showDecimals){
     cout << setw(8) << date;
     cout << " . . . $";
+    
     if (showDecimals)
     { cout << fixed << setprecision(2) << setw(5) << amount << endl; }
     else
@@ -103,16 +130,18 @@ void Profits::printEntry(bool showDecimals){
 Expenses::Expenses(void){
     amount = 0.0;
     date = "00/00/00";
-    reason = "NaNaNa";
+    reason = new string;
+    *reason = "NaNaNa";
 }
 Expenses::~Expenses(){
+    delete reason;
     //destructor;
 }
-void Expenses::setReason(std::string rsn){
-    reason = rsn;
+void Entry::setReason(std::string rsn){
+    *reason = rsn;
 }
-std::string Expenses::getReason(void){
-    return reason;
+std::string Entry::getReason(void){
+    return *reason;
 }
 void Expenses::printEntry(void){
     cout << left; // align left
@@ -120,7 +149,7 @@ void Expenses::printEntry(void){
     cout << "   . .   $";
     cout << fixed << setprecision(2) << setw(7) << amount;
     cout << " . .   ";
-    cout << reason << endl;
+    cout << *reason << endl;
     cout << resetiosflags(std::ios::adjustfield); //realign right
 }
 
@@ -181,7 +210,7 @@ void loadProfits(std::string filename, std::vector<Profits> &inVector)
 }
 
 // 'loadExpense' will read inputted file and load values on to expenses vector
-void loadExpense(std::string filename, std::vector<Expenses> &inVector)
+void loadExpense(std::string filename, std::vector<Entry> &inVector)
 {
     std::string buffer(41, '\0');
     std::ifstream inFile(filename);
@@ -249,7 +278,7 @@ void saveProfits(int initialValues, std::string filename, std::vector<Profits> &
 }
 
 // 'saveExpense' will write any changes in appropiate vector to the file
-void saveExpense(int initialValues, std::string filename, std::vector<Expenses> &inVector)
+void saveExpense(int initialValues, std::string filename, std::vector<Entry> &inVector)
 {
     std::ofstream inFile(filename, ios::app);
     
@@ -374,33 +403,17 @@ void setChanged(std::string vector, bool deleteDone)
 bool isChanged(std::string vector)
 {
     if (vector == "Checkings")
-    {
-        if(checkingsChanged)
-            return true;
-        else
-            return false;
-    }
+        return checkingsChanged;
+    
     else if (vector == "Savings")
-    {
-        if(savingsChanged)
-            return true;
-        else
-            return false;
-    }
+        return savingsChanged;
+    
     else if (vector == "Expenses")
-    {
-        if(expensesChanged)
-            return true;
-        else
-            return false;
-    }
+        return expensesChanged;
+    
     else if (vector == "Special Expenses")
-    {
-        if (specialExpensesChanged)
-            return true;
-        else
-            return false;
-    }
+        return specialExpensesChanged;
+    
     else
     {
         cout << "Unable to find " << vector << "!\n\n";

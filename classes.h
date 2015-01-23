@@ -19,13 +19,18 @@ class Entry{
 protected:
     float amount;
     std::string date;
+    std::string* reason;
 public:
+    Entry(bool isExpense = false);
     void setDate(std::string);
     void setAmount(float amnt);
+    std::string getReason(void);
+    void setReason(std::string);
     std::string getDate(void);
     float getAmount(void);
     void loadDate(std::string);
     void loadAmount(float amnt);
+    void printEntry(bool isExpense = false);
 };
 
 // Profits - Child Class
@@ -39,12 +44,11 @@ public:
 // Expenses - Child Class
 class Expenses : public Entry{
 private:
-    std::string reason;
+    
 public:
     Expenses(void);
     ~Expenses(void);
-    std::string getReason(void);
-    void setReason(std::string);
+    
     void printEntry(void);
 };
 
@@ -59,8 +63,8 @@ int getAmountOfValues(std::string);
 void setChanged(std::string, bool deleteDone = false);
 bool isChanged(std::string);
 
-void loadExpense(std::string, std::vector<Expenses>&);
+void loadExpense(std::string, std::vector<Entry>&);
 void loadProfits(std::string, std::vector<Profits>&);
 void saveProfits(int, std::string, std::vector<Profits>&);
-void saveExpense(int, std::string, std::vector<Expenses>&);
+void saveExpense(int, std::string, std::vector<Entry>&);
 #endif

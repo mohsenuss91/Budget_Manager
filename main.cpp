@@ -36,8 +36,10 @@ int main(void)
     // initialize vector's needed to store all inputs
     vector<Profits> checkings(NUMOFCHECKINGS);
     vector<Profits> savings(NUMOFSAVINGS);
-    vector<Expenses> expenses(NUMOFEXPENSES);
-    vector<Expenses> specialExpenses(NUMOFSPECIALEXPENSES);
+    vector<Entry> expenses(true);
+    expenses.resize(NUMOFEXPENSES);
+    vector<Entry> specialExpenses(true);
+    specialExpenses.resize(NUMOFSPECIALEXPENSES);
     
     // loads files into memory
     loadProfits("data/checkings.csv", checkings);
