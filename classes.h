@@ -21,12 +21,12 @@ protected:
     std::string date;
     std::string* reason;
 public:
-    Entry(bool isExpense = false);
+    Entry();
     void setDate(std::string);
     void setAmount(float amnt);
-    std::string getReason(void);
     void setReason(std::string);
     std::string getDate(void);
+    std::string getReason(void);
     float getAmount(void);
     void loadDate(std::string);
     void loadAmount(float amnt);
@@ -39,15 +39,12 @@ public:
 void drawMainMenu(void);
 void drawSubMenu(std::string);
 
-Entry inputExpense(Entry);
-Entry inputProfit(Entry);
+Entry inputEntry(Entry, bool isExpense = false);
 
 int getAmountOfValues(std::string);
 void setChanged(std::string, bool deleteDone = false);
 bool isChanged(std::string);
 
-void loadExpense(std::string, std::vector<Entry>&);
-void loadProfits(std::string, std::vector<Entry>&);
-void saveProfits(int, std::string, std::vector<Entry>&);
-void saveExpense(int, std::string, std::vector<Entry>&);
+void loadEntry(std::string, std::vector<Entry>&, bool isExpense = false);
+void saveEntry(int, std::string, std::vector<Entry>&,bool isExpense = false);
 #endif

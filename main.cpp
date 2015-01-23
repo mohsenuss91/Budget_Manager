@@ -40,10 +40,10 @@ int main(void)
     vector<Entry> specialExpenses(NUMOFSPECIALEXPENSES);
     
     // loads files into memory
-    loadProfits("data/checkings.csv", checkings);
-    loadProfits("data/savings.csv", savings);
-    loadExpense("data/expenses.csv", expenses);
-    loadExpense("data/specialexpenses.csv", specialExpenses);
+    loadEntry("data/checkings.csv", checkings);
+    loadEntry("data/savings.csv", savings);
+    loadEntry("data/expenses.csv", expenses, true);
+    loadEntry("data/specialexpenses.csv", specialExpenses, true);
     
     // initialize variables needed to run menu's
     unsigned int inChoice;
@@ -70,7 +70,7 @@ int main(void)
                         if(inChoice == 1)
                         {
                             static Entry newInput;
-                            checkings.push_back( inputProfit(newInput) );
+                            checkings.push_back( inputEntry(newInput) );
                             setChanged("Checkings");
                             
                         }
@@ -129,7 +129,7 @@ int main(void)
                         if(inChoice == 1)
                         {
                             static Entry newInput;
-                            savings.push_back( inputProfit(newInput) );
+                            savings.push_back( inputEntry(newInput) );
                             setChanged("Savings");
                         }
                         else if (inChoice == 2)
@@ -188,7 +188,7 @@ int main(void)
                         if(inChoice == 1)
                         {
                             static Entry newExpense;
-                            expenses.push_back( inputExpense(newExpense) );
+                            expenses.push_back( inputEntry(newExpense, true) );
                             setChanged("Expenses");
                         }
                         else if (inChoice == 2)
@@ -246,7 +246,7 @@ int main(void)
                         if(inChoice == 1)
                         {
                             static Entry newExpense;
-                            specialExpenses.push_back( inputExpense(newExpense) );
+                            specialExpenses.push_back( inputEntry(newExpense, true) );
                             setChanged("Special Expenses");
                         }
                         else if (inChoice == 2)
@@ -338,13 +338,13 @@ int main(void)
                 {
                     // Checks where isChanged flag is true and saves that vector to file
                     if(isChanged("Checkings"))
-                        saveProfits(NUMOFCHECKINGS, "data/checkings.csv", checkings);
+                        saveEntry(NUMOFCHECKINGS, "data/checkings.csv", checkings);
                     if(isChanged("Savings"))
-                        saveProfits(NUMOFSAVINGS, "data/savings.csv", savings);
+                        saveEntry(NUMOFSAVINGS, "data/savings.csv", savings);
                     if(isChanged("Expenses"))
-                        saveExpense(NUMOFEXPENSES, "data/expenses.csv", expenses);
+                        saveEntry(NUMOFEXPENSES, "data/expenses.csv", expenses, true);
                     if(isChanged("Special Expenses"))
-                        saveExpense(NUMOFSPECIALEXPENSES, "data/specialexpenses.csv", specialExpenses);
+                        saveEntry(NUMOFSPECIALEXPENSES, "data/specialexpenses.csv", specialExpenses, true);
                 }
                 
                 cout << "Quitting...\n\n";

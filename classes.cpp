@@ -27,15 +27,10 @@ static bool specialExpensesChanged = false;
 static bool deleteWasDone = false;
 
 // 'Entry' functions
-Entry::Entry(bool isExpense)
+Entry::Entry()
 {
-    isExpense=1;
     amount = 0.0;
     date = "00/00/00";
-    if(isExpense)
-    {
-        //
-    }
 }
 void Entry::loadDate(std::string d){ //move inline
     date = d;
@@ -152,31 +147,9 @@ void drawSubMenu(std::string category)
 
 
 
-// 'loadProfits' will read inputted file and load values on to profits vector
-void loadProfits(std::string filename, std::vector<Entry> &inVector)
-{
-    std::string buffer(9, '\0');
-    std::ifstream inFile(filename);
-    if(!inFile)
-    {
-        cout << "Error opening file named \"" << filename << "\". Check if it exists.\n";
-        exit(2);
-    }
-    for (int i = 0; std::getline(inFile,buffer,'$'); i++)
-    // will read until getline fails and also reads in $ sign and skips it
-    {
-        
-        std::getline(inFile,buffer,',');
-        inVector[i].loadAmount(std::stod(buffer));
-        
-        std::getline(inFile,buffer,'\r');
-        inVector[i].loadDate(buffer);
-    }
-    inFile.close();
-}
 
 // 'loadExpense' will read inputted file and load values on to expenses vector
-void loadExpense(std::string filename, std::vector<Entry> &inVector)
+void loadEntry(std::string filename, std::vector<Entry> &inVector, bool isExpense)
 {
     std::string buffer(41, '\0');
     std::ifstream inFile(filename);
@@ -190,61 +163,21 @@ void loadExpense(std::string filename, std::vector<Entry> &inVector)
         
         std::getline(inFile,buffer,',');
         inVector[i].loadAmount(std::stod(buffer));
-        std::getline(inFile,buffer,',');
-        inVector[i].setReason(buffer);
+        if(isExpense)
+        {
+            std::getline(inFile,buffer,',');
+            inVector[i].setReason(buffer);
+        }
         std::getline(inFile,buffer,'\r');
         inVector[i].loadDate(buffer);
     }
     inFile.close();
 }
 
-// 'saveProfits' will write any changes in appropiate vector to the file
-void saveProfits(int initialValues, std::string filename, std::vector<Entry> &inVector)
-{
-    //opens the file and does error checking
-    std::ofstream inFile(filename, ios::app);
-    if (!inFile)
-    {
-        cout << "Error opening file named \"" << filename << "\". New file will be made.\n";
-    }
-    
-    
-    //checks if values were added or subtracted and either appends or writes new file as a result
-    if(deleteWasDone)
-    {
-        //create a new file to rewrite file without the deleted entries
-        std::string newFilename = filename + ".new";
-        std::fstream newFile(newFilename, std::ios::out);
-        
-        cout << "Deleting changes to " << filename << "...\n";
-        
-        //write the first entry without a newline and with a newline inside the for loop
-        newFile << '$' << inVector[0].getAmount() << ',' << inVector[0].getDate();
-        for (int i = 1; i < inVector.size(); i++)
-        {
-            newFile << '\r' << '$' << inVector[i].getAmount() << ',' << inVector[i].getDate();
-        }
-        
-        //close all files
-        inFile.close();
-        newFile.close();
-        
-        //erase original file and rename new file to original file
-        remove( filename.c_str() );
-        rename( newFilename.c_str(), filename.c_str() );
-    }
-    else
-    {
-        cout << "Writing changes to " << filename << "...\n";
-        for (int i = initialValues; i < inVector.size(); i++)
-            inFile << '\r' << '$' << inVector[i].getAmount() << ',' << inVector[i].getDate();
-        inFile.close();
 
-    }
-}
 
 // 'saveExpense' will write any changes in appropiate vector to the file
-void saveExpense(int initialValues, std::string filename, std::vector<Entry> &inVector)
+void saveEntry(int initialValues, std::string filename, std::vector<Entry> &inVector, bool isExpense)
 {
     std::ofstream inFile(filename, ios::app);
     
@@ -262,10 +195,16 @@ void saveExpense(int initialValues, std::string filename, std::vector<Entry> &in
         cout << "Deleting changes to " << filename << "...\n";
         
         //write the first entry without a newline and with a newline inside the for loop
-        newFile << '$' << inVector[0].getAmount() << ',' << inVector[0].getReason() << ',' << inVector[0].getDate();
+        newFile << '$' << inVector[0].getAmount() << ',';
+        if(isExpense)
+        { newFile << inVector[0].getReason() << ','; }
+        newFile << inVector[0].getDate();
         for (int i = 1; i < inVector.size(); i++)
         {
-            newFile << '\r' << '$' << inVector[i].getAmount() << ',' << inVector[i].getReason() << ',' << inVector[i].getDate();
+            newFile << '\r' << '$' << inVector[i].getAmount() << ',';
+            if(isExpense)
+            { newFile << inVector[i].getReason() << ','; }
+            newFile << inVector[i].getDate();
         }
         
         //close all files
@@ -281,17 +220,19 @@ void saveExpense(int initialValues, std::string filename, std::vector<Entry> &in
     {
         cout << "Writing changes to " << filename << "...\n";
         for (int i = initialValues; i < inVector.size(); i++)
-        { inFile << '\r' << '$' << inVector[i].getAmount() << ',' << inVector[0].getReason() << ',' << inVector[i].getDate(); }
+        {
+            inFile << '\r' << '$' << inVector[i].getAmount() << ',' << inVector[0].getReason() << ',' << inVector[i].getDate();
+        }
         inFile.close();
     }
 }
 
 // 'inputExpense' will get values from user and then append the entries to the vector.
-Entry inputExpense(Entry newInput)
+Entry inputEntry(Entry newInput, bool isExpense)
 {
     float inAmount;
     string inDate(9, '\0');
-    string inReason(41, '\0');
+    
     
     cout << "Give me the date: " ;
     cin >> inDate;
@@ -299,34 +240,22 @@ Entry inputExpense(Entry newInput)
     cout << "Give me the amount: $";
     cin >> inAmount;
     newInput.setAmount(inAmount);
-    cout << "Give me the reason (40 character limit): ";
-    cin.ignore();
-    getline (cin,inReason);
-    while (inReason.length() > 40)
+    if (isExpense)
     {
-        cin.clear();
-        cout << "Try Again: ";
+        static string inReason(41, '\0');
+        cout << "Give me the reason (40 character limit): ";
+        cin.ignore();
         getline (cin,inReason);
+        while (inReason.length() > 40)
+        {
+            cin.clear();
+            cout << "Try Again: ";
+            getline (cin,inReason);
+        }
+        newInput.setReason(inReason);
     }
-    newInput.setReason(inReason);
     return newInput;
 }
-
-// 'inputProfit' will get values from user and then append the entries to the vector.
-Entry inputProfit(Entry newInput)
-{
-    float inAmount;
-    string inDate(9, '\0');
-    
-    cout << "Give me the date: " ;
-    cin >> inDate;
-    newInput.setDate(inDate);
-    cout << "Give me the amount: $";
-    cin >> inAmount;
-    newInput.setAmount(inAmount);
-    return newInput;
-}
-
 
 
 // 'getAmountOfValues' returns the number of lines in a file
