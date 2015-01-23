@@ -33,8 +33,7 @@ class Profits : public Entry{
 public:
     Profits(void);
     ~Profits(void);
-    void printEntry(void);
-    void printEntry(bool);
+    void printEntry(bool showDecimals = true);
 };
 
 // Expenses - Child Class
@@ -56,7 +55,8 @@ void drawSubMenu(std::string);
 Expenses inputExpense(Expenses);
 Profits inputProfit(Profits);
 
-void setChanged(std::string);
+int getAmountOfValues(std::string);
+void setChanged(std::string, bool deleteDone = false);
 bool isChanged(std::string);
 
 void loadExpense(std::string, std::vector<Expenses>&);

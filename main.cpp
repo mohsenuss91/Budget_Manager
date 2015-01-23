@@ -11,9 +11,7 @@
 
             /********************************************************************************
                                                     ToDo
-             Find a way to initialize the correct size of each vector on startup
-             
-             Fix write: NOT TAKING INTO ACCOUNT REMOVAL WAS DONE N THEN VALUE WAS ADDED
+             Improve write Function
              Implement view function that allows manual input.
             **********************************************************************************/
 
@@ -22,6 +20,7 @@
 #include <limits> //include for numeric_limits
 #include <vector> //include for vector arrays
 #include <iomanip> //include for cout formatting
+#include <fstream>
 #include "classes.h" //include for classes
 
 using namespace std;
@@ -29,11 +28,10 @@ using namespace std;
 int main(void)
 {
     // variables needed to initialize right amount of entries at startup
-    /* TODO: Find a way to initialize the correct size of each vector on startup */
-    const int NUMOFEXPENSES = 432;
-    const int NUMOFSPECIALEXPENSES = 11;
-    const int NUMOFCHECKINGS = 313;
-    const int NUMOFSAVINGS = 80;
+    const int NUMOFCHECKINGS = getAmountOfValues("data/checkings.csv");
+    const int NUMOFSAVINGS = getAmountOfValues("data/savings.csv");
+    const int NUMOFEXPENSES = getAmountOfValues("data/expenses.csv");
+    const int NUMOFSPECIALEXPENSES = getAmountOfValues("data/specialexpenses.csv");
     
     // initialize vector's needed to store all inputs
     vector<Profits> checkings(NUMOFCHECKINGS);
@@ -87,7 +85,7 @@ int main(void)
                                 {
                                     cout << "Removing last entry..." << endl;
                                     checkings.pop_back();
-                                    setChanged("Checkings");
+                                    setChanged("Checkings", true);
                                 }
                                 else
                                 {
@@ -145,7 +143,7 @@ int main(void)
                                 {
                                     cout << "Removing last entry..." << endl;
                                     savings.pop_back();
-                                    setChanged("Savings");
+                                    setChanged("Savings", true);
                                 }
                                 else
                                 {
@@ -204,7 +202,7 @@ int main(void)
                                 {
                                     cout << "Removing last entry..." << endl;
                                     expenses.pop_back();
-                                    setChanged("Expenses");
+                                    setChanged("Expenses", true);
                                 }
                                 else
                                 {
@@ -262,7 +260,7 @@ int main(void)
                                 {
                                     cout << "Removing last entry..." << endl;
                                     specialExpenses.pop_back();
-                                    setChanged("Special Expenses");
+                                    setChanged("Special Expenses", true);
                                 }
                                 else
                                 {
@@ -338,7 +336,7 @@ int main(void)
                 }
                 else
                 {
-                    // Checks if isChanged flag is true and saves if it is
+                    // Checks where isChanged flag is true and saves that vector to file
                     if(isChanged("Checkings"))
                         saveProfits(NUMOFCHECKINGS, "data/checkings.csv", checkings);
                     if(isChanged("Savings"))

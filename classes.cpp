@@ -11,7 +11,7 @@
 #include <iostream>
 #include <fstream> //include for fopen and fclose
 #include <limits> //include for numeric_limits
-#include <string> //include for string
+#include <string> //include for string, stod
 #include <cstdlib> //include for exit()
 #include <cctype> //include for isdigit
 #include <cstdio>
@@ -24,6 +24,7 @@ static bool checkingsChanged = false;
 static bool savingsChanged = false;
 static bool expensesChanged = false;
 static bool specialExpensesChanged = false;
+static bool deleteWasDone = false;
 
 // 'Entry' functions
 void Entry::loadDate(std::string d){ //move inline
@@ -86,18 +87,13 @@ Profits::Profits(void){
 Profits::~Profits(){
     //destructor;
 }
-void Profits::printEntry(void){
-        cout << setw(8) << date;
-        cout << " . . . $";
-        cout << fixed << setprecision(2) << setw(5) << amount << endl;
-}
 void Profits::printEntry(bool showDecimals){
     cout << setw(8) << date;
     cout << " . . . $";
-    if (!showDecimals)
-    { cout << setw(2) << amount << endl; }
+    if (showDecimals)
+    { cout << fixed << setprecision(2) << setw(5) << amount << endl; }
     else
-    { cout << fixed << setprecision(2) << amount << endl; }
+    { cout << setw(2) << amount << endl; }
     
 }
 
@@ -219,14 +215,7 @@ void saveProfits(int initialValues, std::string filename, std::vector<Profits> &
     
     
     //checks if values were added or subtracted and either appends or writes new file as a result
-    if(inVector.size() > initialValues)
-    {
-        cout << "Writing changes to " << filename << "...\n";
-        for (int i = initialValues; i < inVector.size(); i++)
-            inFile << '\r' << '$' << inVector[i].getAmount() << ',' << inVector[i].getDate();
-        inFile.close();
-    }
-    else
+    if(deleteWasDone)
     {
         //create a new file to rewrite file without the deleted entries
         std::string newFilename = filename + ".new";
@@ -249,8 +238,14 @@ void saveProfits(int initialValues, std::string filename, std::vector<Profits> &
         remove( filename.c_str() );
         rename( newFilename.c_str(), filename.c_str() );
     }
-    
-    
+    else
+    {
+        cout << "Writing changes to " << filename << "...\n";
+        for (int i = initialValues; i < inVector.size(); i++)
+            inFile << '\r' << '$' << inVector[i].getAmount() << ',' << inVector[i].getDate();
+        inFile.close();
+
+    }
 }
 
 // 'saveExpense' will write any changes in appropiate vector to the file
@@ -263,14 +258,7 @@ void saveExpense(int initialValues, std::string filename, std::vector<Expenses> 
     
     
     //checks if values were added or subtracted and either appends or writes new file as a result
-    if(inVector.size() > initialValues)
-    {
-        cout << "Writing changes to " << filename << "...\n";
-        for (int i = initialValues; i < inVector.size(); i++)
-        { inFile << '\r' << '$' << inVector[i].getAmount() << ',' << inVector[0].getReason() << ',' << inVector[i].getDate(); }
-        inFile.close();
-    }
-    else
+    if(deleteWasDone)
     {
         //create a new file to rewrite file without the deleted entries
         std::string newFilename = filename + ".new";
@@ -282,7 +270,7 @@ void saveExpense(int initialValues, std::string filename, std::vector<Expenses> 
         newFile << '$' << inVector[0].getAmount() << ',' << inVector[0].getReason() << ',' << inVector[0].getDate();
         for (int i = 1; i < inVector.size(); i++)
         {
-            newFile << '$' << inVector[0].getAmount() << ',' << inVector[0].getReason() << ',' << inVector[0].getDate();
+            newFile << '\r' << '$' << inVector[i].getAmount() << ',' << inVector[i].getReason() << ',' << inVector[i].getDate();
         }
         
         //close all files
@@ -292,6 +280,14 @@ void saveExpense(int initialValues, std::string filename, std::vector<Expenses> 
         //erase original file and rename new file to original file
         remove( filename.c_str() );
         rename( newFilename.c_str(), filename.c_str() );
+
+    }
+    else
+    {
+        cout << "Writing changes to " << filename << "...\n";
+        for (int i = initialValues; i < inVector.size(); i++)
+        { inFile << '\r' << '$' << inVector[i].getAmount() << ',' << inVector[0].getReason() << ',' << inVector[i].getDate(); }
+        inFile.close();
     }
 }
 
@@ -338,9 +334,26 @@ Profits inputProfit(Profits newInput)
 
 
 
-// 'setChanged' will flag passed in vector name as changed
-void setChanged(std::string vector)
+// 'getAmountOfValues' returns the number of lines in a file
+int getAmountOfValues(std::string filename)
 {
+    std::ifstream inFile(filename);
+    std::string buffer;
+    int i;
+    for (i = 0; std::getline(inFile, buffer, '\r'); i++)
+        /* do nothing */;
+    return i;
+}
+
+
+
+
+// 'setChanged' will flag passed in vector name as changed
+void setChanged(std::string vector, bool deleteDone)
+{
+    if(deleteDone)
+        deleteWasDone = true;
+    
     if (vector == "Checkings")
         checkingsChanged = true;
     
