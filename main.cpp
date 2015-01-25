@@ -12,7 +12,9 @@
             /********************************************************************************
                                                     ToDo
              Fix print out
-             Clean up code
+             Factor out cases into functions
+             Add Titles to csv
+             Skip Over titles in load (maybe save)
              Implement view function that allows manual input.
             **********************************************************************************/
 
@@ -49,7 +51,12 @@ int main(void)
     // initialize variables needed to run menu's
     unsigned int inChoice;
     char inChar;
-    
+
+    /* 
+    Prints out memory needed
+    cout << sizeof(string(40, 'a')) << "bytes per string, 400 emptry string would be " << sizeof(string(40, 'a'))*400/8 << " bytes" << endl;
+    cout << sizeof(string*) << "bytes per string pointer, 400 emptry string pointers would be " <<  sizeof(string*)*400/8 << " kb" << endl; 
+     */
     
     do
     {
@@ -62,7 +69,7 @@ int main(void)
             // Option #1 - Brings up editing menu for Checkings
             case 1 :
             {
-                inChoice = 0;
+                    /*inChoice = 0;
                     while (inChoice != 4)
                     {
                         drawSubMenu("Checkings");
@@ -70,8 +77,8 @@ int main(void)
                         cin >> inChoice;
                         if(inChoice == 1)
                         {
-                            static Entry newInput;
-                            checkings.push_back( inputEntry(newInput) );
+                            
+                            checkings.push_back( inputEntry() );
                             setChanged("Checkings");
                             
                         }
@@ -114,14 +121,15 @@ int main(void)
                         
                         else
                         { cout << "Invalid Input.\n"; }
-                    }
+                    }*/
+                submenuController("Checkings", checkings);
                     break;
             }
             
             // Option #2 - Brings up editing menu for Savings
             case 2 :
             {
-                inChoice = 0;
+                /*inChoice = 0;
                     while (inChoice != 4)
                     {
                         drawSubMenu("Savings");
@@ -129,8 +137,7 @@ int main(void)
                         cin >> inChoice;
                         if(inChoice == 1)
                         {
-                            static Entry newInput;
-                            savings.push_back( inputEntry(newInput) );
+                            savings.push_back( inputEntry() );
                             setChanged("Savings");
                         }
                         else if (inChoice == 2)
@@ -172,14 +179,15 @@ int main(void)
                         
                         else
                         { cout << "Invalid Input.\n"; }
-                    }
+                    }*/
+                submenuController("Savings", savings);
                 break;
             }
             
             // Option #3 - Brings up editing menu for Expenses
             case 3 :
             {
-                inChoice = 0;
+                /*inChoice = 0;
                     while (inChoice != 4)
                     {
                         drawSubMenu("Expenses");
@@ -188,8 +196,7 @@ int main(void)
                         cin.clear(); cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                         if(inChoice == 1)
                         {
-                            static Entry newExpense;
-                            expenses.push_back( inputEntry(newExpense, true) );
+                            expenses.push_back( inputEntry( true) );
                             setChanged("Expenses");
                         }
                         else if (inChoice == 2)
@@ -231,14 +238,15 @@ int main(void)
                         
                         else
                         { cout << "Invalid Input.\n"; }
-                    }
+                    }*/
+                submenuController("Expenses", expenses, true);
                 break;
             }
                 
              // Option #4 - Brings up editing menu for Special Expenses
             case 4 :
             {
-                inChoice = 0;
+                /*inChoice = 0;
                     while (inChoice != 4)
                     {
                         drawSubMenu("Special Expenses");
@@ -246,8 +254,7 @@ int main(void)
                         cin.clear(); cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                         if(inChoice == 1)
                         {
-                            static Entry newExpense;
-                            specialExpenses.push_back( inputEntry(newExpense, true) );
+                            specialExpenses.push_back( inputEntry( true) );
                             setChanged("Special Expenses");
                         }
                         else if (inChoice == 2)
@@ -289,7 +296,8 @@ int main(void)
                         
                         else
                         { cout << "Invalid Input.\n"; }
-                    }
+                    }*/
+                submenuController("Special Expenses", specialExpenses, true);
                 break;
             }
                 

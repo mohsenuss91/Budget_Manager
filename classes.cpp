@@ -19,35 +19,28 @@
 
 using namespace std;
 
-
 static bool checkingsChanged = false;
 static bool savingsChanged = false;
 static bool expensesChanged = false;
 static bool specialExpensesChanged = false;
 static bool deleteWasDone = false;
 
-// 'Entry' functions
+/* Class Methods */
+
+// 'Entry' Constructor
 Entry::Entry()
 {
     amount = 0.0;
     date = "00/00/00";
     isExpense = false;
 }
-void Entry::loadDate(std::string d){ //move inline
-    date = d;
+
+// 'Entry' Destructor
+Entry::~Entry()
+{
+    //
 }
-void Entry::loadAmount(float amnt){ //move inline
-    amount = amnt;
-}
-std::string Entry::getDate(void){ //move inline
-    return date;
-}
-float Entry::getAmount(void){ //move inline
-    return amount;
-}
-bool Entry::getIsExpense(void){
-    return isExpense;
-}
+// 'setDate' will check string for valid date input
 void Entry::setDate(std::string d){
     unsigned int size = (int)d.length();
     unsigned int slashCount = 0;
@@ -72,6 +65,8 @@ void Entry::setDate(std::string d){
         setDate(d);
     }
 }
+
+// 'setAmount' will error check for valid amount input
 void Entry::setAmount(float amnt){
     unsigned int buf;
     while(amnt == 0)
@@ -86,6 +81,7 @@ void Entry::setAmount(float amnt){
     amount = amnt;
 }
 
+// 'printEntry' will output to screen an entries values formatted
 void Entry::printEntry(){
     cout << left; // align left
     cout << date;
@@ -101,10 +97,7 @@ void Entry::printEntry(){
     cout << resetiosflags(std::ios::adjustfield); //realign right
 }
 
-
-
-
-
+// 'setReason' will dynamically allocate memory for reason string if Entry is an expense
 void Entry::setReason(std::string rsn){
     if(!reason)
     {
@@ -114,12 +107,12 @@ void Entry::setReason(std::string rsn){
     }
     *reason = rsn;
 }
-std::string Entry::getReason(void){
-    return *reason;
-}
 
 
 
+
+
+/* Functions */
 
 // 'drawMainMenu' prints the main menu
 void drawMainMenu(void)
@@ -136,6 +129,7 @@ void drawMainMenu(void)
     "\t\t***********************************\n";
 }
 
+// 'drawSubMenu' prints the sub menu
 void drawSubMenu(std::string category)
 {
     cout << "\n\t\t*******************************\n"
@@ -150,10 +144,97 @@ void drawSubMenu(std::string category)
     cout << endl << "How will you modify " << category << ": ";
 }
 
+void submenuController(std::string vectorName, std::vector<Entry> &inVector, bool isExpense)
+{
+    unsigned int inChoice = 0;
+    char inChar;
+    while (inChoice != 4)
+    {
+        drawSubMenu(vectorName);
+        cin >> inChoice;
+        cin.clear(); cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        if(inChoice == 1)
+        {
+            
+            inVector.push_back( inputEntry() );
+            setChanged(vectorName);
+            
+        }
+        else if (inChoice == 2)
+        {
+            cout << "Are you sure you want to remove last input? (Y/N): ";
+            cin >>inChar;
+            
+            if (inChar == 'Y' || inChar == 'y')
+            {
+                if(inVector.size() > 0)
+                {
+                    cout << "Removing last entry..." << endl;
+                    inVector.pop_back();
+                    setChanged(vectorName, isExpense);
+                }
+                else
+                {
+                    cout << "NO ENTRIES REMAIN..." << endl;
+                }
+            }
+            else
+            {
+                cout << "Returning to previous menu...\n";
+            }
+            
+        }
+        else if (inChoice == 3)
+        {
+            cout << "\n" << vectorName << "\n";
+            for (int i = 0; i < inVector.size(); i++)
+            {
+                cout << setw(3) << i+1 << ": ";
+                inVector[i].printEntry();
+            }
+        }
+        
+        else if (inChoice == 4)
+        { cout << "Returning to main menu...\n\n"; }
+        
+        else
+        { cout << "Invalid Input.\n"; }
+    }
+}
 
 
 
-// 'loadExpense' will read inputted file and load values on to expenses vector
+// 'inputEntry' will get values from user and then append the entries to the vector.
+Entry inputEntry(bool isExpense)
+{
+    float inAmount;
+    string inDate(9, '\0');
+    static Entry newInput;
+    
+    cout << "Give me the date: " ;
+    cin >> inDate;
+    newInput.setDate(inDate);
+    cout << "Give me the amount: $";
+    cin >> inAmount;
+    newInput.setAmount(inAmount);
+    if (isExpense)
+    {
+        static string inReason(41, '\0');
+        cout << "Give me the reason (40 character limit): ";
+        cin.ignore();
+        getline (cin,inReason);
+        while (inReason.length() > 40)
+        {
+            cin.clear();
+            cout << "Try Again: ";
+            getline (cin,inReason);
+        }
+        newInput.setReason(inReason);
+    }
+    return newInput;
+}
+
+// 'loadEntry' will read inputted file and load values appropiate vector
 void loadEntry(std::string filename, std::vector<Entry> &inVector, bool isExpense)
 {
     std::string buffer(41, '\0');
@@ -179,9 +260,7 @@ void loadEntry(std::string filename, std::vector<Entry> &inVector, bool isExpens
     inFile.close();
 }
 
-
-
-// 'saveExpense' will write any changes in appropiate vector to the file
+// 'saveEntry' will write any changes in appropiate vector to the file
 void saveEntry(int initialValues, std::string filename, std::vector<Entry> &inVector)
 {
     std::ofstream inFile(filename, ios::app);
@@ -232,35 +311,8 @@ void saveEntry(int initialValues, std::string filename, std::vector<Entry> &inVe
     }
 }
 
-// 'inputExpense' will get values from user and then append the entries to the vector.
-Entry inputEntry(Entry newInput, bool isExpense)
-{
-    float inAmount;
-    string inDate(9, '\0');
-    
-    
-    cout << "Give me the date: " ;
-    cin >> inDate;
-    newInput.setDate(inDate);
-    cout << "Give me the amount: $";
-    cin >> inAmount;
-    newInput.setAmount(inAmount);
-    if (isExpense)
-    {
-        static string inReason(41, '\0');
-        cout << "Give me the reason (40 character limit): ";
-        cin.ignore();
-        getline (cin,inReason);
-        while (inReason.length() > 40)
-        {
-            cin.clear();
-            cout << "Try Again: ";
-            getline (cin,inReason);
-        }
-        newInput.setReason(inReason);
-    }
-    return newInput;
-}
+
+
 
 
 // 'getAmountOfValues' returns the number of lines in a file
@@ -273,6 +325,7 @@ int getAmountOfValues(std::string filename)
         /* do nothing */;
     return i;
 }
+
 
 
 

@@ -23,30 +23,38 @@ protected:
     bool isExpense;
 public:
     Entry();
+    ~Entry();
     void setDate(std::string);
     void setAmount(float amnt);
     void setReason(std::string);
-    std::string getDate(void);
-    std::string getReason(void);
-    float getAmount(void);
-    bool getIsExpense(void);
-    void loadDate(std::string);
-    void loadAmount(float amnt);
     void printEntry(void);
+    
+    //inline methods
+    std::string getReason(void)
+        { return *reason; }
+    std::string getDate(void)
+        { return date; }
+    float getAmount(void)
+        { return amount; }
+    bool getIsExpense(void)
+        { return isExpense; }
+    void loadDate(std::string d)
+        { date = d; }
+    void loadAmount(float amnt)
+        { amount = amnt; }
+    
 };
-
-
 
 //Functions
 void drawMainMenu(void);
 void drawSubMenu(std::string);
+void submenuController(std::string, std::vector<Entry>&, bool isExpense = false);
 
-Entry inputEntry(Entry, bool isExpense = false);
-
-int getAmountOfValues(std::string);
 void setChanged(std::string, bool deleteDone = false);
 bool isChanged(std::string);
 
+int getAmountOfValues(std::string);
+Entry inputEntry(bool isExpense = false);
 void loadEntry(std::string, std::vector<Entry>&, bool isExpense = false);
 void saveEntry(int, std::string, std::vector<Entry>&);
 #endif
