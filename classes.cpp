@@ -31,6 +31,7 @@ Entry::Entry()
 {
     amount = 0.0;
     date = "00/00/00";
+    isExpense = false;
 }
 void Entry::loadDate(std::string d){ //move inline
     date = d;
@@ -43,6 +44,9 @@ std::string Entry::getDate(void){ //move inline
 }
 float Entry::getAmount(void){ //move inline
     return amount;
+}
+bool Entry::getIsExpense(void){
+    return isExpense;
 }
 void Entry::setDate(std::string d){
     unsigned int size = (int)d.length();
@@ -82,7 +86,7 @@ void Entry::setAmount(float amnt){
     amount = amnt;
 }
 
-void Entry::printEntry(bool isExpense){
+void Entry::printEntry(){
     cout << left; // align left
     cout << date;
     cout << "   . .   $";
@@ -106,6 +110,7 @@ void Entry::setReason(std::string rsn){
     {
         reason = new string;
         *reason = "NaNaNa";
+        isExpense = true;
     }
     *reason = rsn;
 }
@@ -177,7 +182,7 @@ void loadEntry(std::string filename, std::vector<Entry> &inVector, bool isExpens
 
 
 // 'saveExpense' will write any changes in appropiate vector to the file
-void saveEntry(int initialValues, std::string filename, std::vector<Entry> &inVector, bool isExpense)
+void saveEntry(int initialValues, std::string filename, std::vector<Entry> &inVector)
 {
     std::ofstream inFile(filename, ios::app);
     
@@ -196,13 +201,13 @@ void saveEntry(int initialValues, std::string filename, std::vector<Entry> &inVe
         
         //write the first entry without a newline and with a newline inside the for loop
         newFile << '$' << inVector[0].getAmount() << ',';
-        if(isExpense)
+        if(inVector[0].getIsExpense())
         { newFile << inVector[0].getReason() << ','; }
         newFile << inVector[0].getDate();
         for (int i = 1; i < inVector.size(); i++)
         {
             newFile << '\r' << '$' << inVector[i].getAmount() << ',';
-            if(isExpense)
+            if(inVector[0].getIsExpense())
             { newFile << inVector[i].getReason() << ','; }
             newFile << inVector[i].getDate();
         }

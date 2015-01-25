@@ -11,7 +11,8 @@
 
             /********************************************************************************
                                                     ToDo
-             Improve write Function
+             Fix print out
+             Clean up code
              Implement view function that allows manual input.
             **********************************************************************************/
 
@@ -104,7 +105,7 @@ int main(void)
                             for (int i = 0; i < checkings.size(); i++)
                             {
                                 cout << setw(3) << i+1 << ": ";
-                                checkings[i].printEntry(false);
+                                checkings[i].printEntry();
                             }
                         }
                         
@@ -221,7 +222,7 @@ int main(void)
                             for (int i = 0; i < expenses.size(); i++)
                             {
                                 cout << setw(3) << i+1 << ": ";
-                                expenses[i].printEntry(true);
+                                expenses[i].printEntry();
                             }
                         }
                         
@@ -279,7 +280,7 @@ int main(void)
                             for (int i = 0; i < specialExpenses.size(); i++)
                             {
                                 cout << setw(2) << i+1 << ": ";
-                                specialExpenses[i].printEntry(true);
+                                specialExpenses[i].printEntry();
                             }
                         }
                         
@@ -298,7 +299,7 @@ int main(void)
                 cout << "\nCHECKINGS\n";
                 for (int i = checkings.size()-20;i<checkings.size(); i++) {
                     cout << setw(3) << i+1 << ": ";
-                    checkings[i].printEntry(false);
+                    checkings[i].printEntry();
                 }
                 
                 cout << "\nSAVINGS\n";
@@ -309,13 +310,13 @@ int main(void)
                 cout << "\nEXPENSES\n";
                 for (int i = expenses.size()-20;i<expenses.size(); i++) {
                     cout << setw(3) << i+1 << ": ";
-                    expenses[i].printEntry(true);
+                    expenses[i].printEntry();
                 }
                 
                 cout << "\nSPECIALEXPENSES\n";
                 for (int i = specialExpenses.size()-8;i<specialExpenses.size(); i++) {
                     cout << setw(2) << i+1 << ": ";
-                    specialExpenses[i].printEntry(true);
+                    specialExpenses[i].printEntry();
                 }
                 
                 cin.ignore();
@@ -342,9 +343,9 @@ int main(void)
                     if(isChanged("Savings"))
                         saveEntry(NUMOFSAVINGS, "data/savings.csv", savings);
                     if(isChanged("Expenses"))
-                        saveEntry(NUMOFEXPENSES, "data/expenses.csv", expenses, true);
+                        saveEntry(NUMOFEXPENSES, "data/expenses.csv", expenses);
                     if(isChanged("Special Expenses"))
-                        saveEntry(NUMOFSPECIALEXPENSES, "data/specialexpenses.csv", specialExpenses, true);
+                        saveEntry(NUMOFSPECIALEXPENSES, "data/specialexpenses.csv", specialExpenses);
                 }
                 
                 cout << "Quitting...\n\n";

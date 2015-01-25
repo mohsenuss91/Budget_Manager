@@ -20,6 +20,7 @@ protected:
     float amount;
     std::string date;
     std::string* reason;
+    bool isExpense;
 public:
     Entry();
     void setDate(std::string);
@@ -28,9 +29,10 @@ public:
     std::string getDate(void);
     std::string getReason(void);
     float getAmount(void);
+    bool getIsExpense(void);
     void loadDate(std::string);
     void loadAmount(float amnt);
-    void printEntry(bool isExpense = false);
+    void printEntry(void);
 };
 
 
@@ -46,5 +48,5 @@ void setChanged(std::string, bool deleteDone = false);
 bool isChanged(std::string);
 
 void loadEntry(std::string, std::vector<Entry>&, bool isExpense = false);
-void saveEntry(int, std::string, std::vector<Entry>&,bool isExpense = false);
+void saveEntry(int, std::string, std::vector<Entry>&);
 #endif
