@@ -31,10 +31,10 @@ using namespace std;
 int main(void)
 {
     // variables needed to initialize right amount of entries at startup
-    const int NUMOFCHECKINGS = getAmountOfValues("data/checkings.csv");
-    const int NUMOFSAVINGS = getAmountOfValues("data/savings.csv");
-    const int NUMOFEXPENSES = getAmountOfValues("data/expenses.csv");
-    const int NUMOFSPECIALEXPENSES = getAmountOfValues("data/specialexpenses.csv");
+    const unsigned int NUMOFCHECKINGS = getAmountOfValues("data/checkings.csv");
+    const unsigned int NUMOFSAVINGS = getAmountOfValues("data/savings.csv");
+    const unsigned int NUMOFEXPENSES = getAmountOfValues("data/expenses.csv");
+    const unsigned int NUMOFSPECIALEXPENSES = getAmountOfValues("data/specialexpenses.csv");
     
     // initialize vector's needed to store all inputs
     vector<Entry> checkings(NUMOFCHECKINGS);
@@ -97,24 +97,24 @@ int main(void)
             case 5 :
             {
                 cout << "\nCHECKINGS\n";
-                for (int i = checkings.size()-20;i<checkings.size(); i++) {
+                for (unsigned int i = checkings.size()-20;i<checkings.size(); i++) {
                     cout << setw(3) << i+1 << ": ";
                     checkings[i].printEntry();
                 }
                 
                 cout << "\nSAVINGS\n";
-                for (int i = savings.size()-20;i<savings.size(); i++) {
+                for (unsigned int i = savings.size()-20;i<savings.size(); i++) {
                     cout << setw(2) << i+1 << ": ";
                     savings[i].printEntry();
                 }
                 cout << "\nEXPENSES\n";
-                for (int i = expenses.size()-20;i<expenses.size(); i++) {
+                for (unsigned int i = expenses.size()-20;i<expenses.size(); i++) {
                     cout << setw(3) << i+1 << ": ";
                     expenses[i].printEntry();
                 }
                 
                 cout << "\nSPECIALEXPENSES\n";
-                for (int i = specialExpenses.size()-8;i<specialExpenses.size(); i++) {
+                for (unsigned int i = specialExpenses.size()-8;i<specialExpenses.size(); i++) {
                     cout << setw(2) << i+1 << ": ";
                     specialExpenses[i].printEntry();
                 }

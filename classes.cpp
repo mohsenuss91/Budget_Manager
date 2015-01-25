@@ -197,7 +197,7 @@ void subMenuController(std::string vectorName, std::vector<Entry> &inVector, boo
         else if (inChoice == 3)
         {
             cout << "\n" << vectorName << "\n";
-            for (int i = 0; i < inVector.size(); i++)
+            for (unsigned int i = 0; i < inVector.size(); i++)
             {
                 cout << setw(3) << i+1 << ": ";
                 inVector[i].printEntry();
@@ -253,7 +253,7 @@ void loadEntry(std::string filename, std::vector<Entry> &inVector, bool isExpens
     {
         cout << "Error opening file named \"" << filename << "\". Nothing will be loaded from it.\n";
     }
-    for (int i = 0; std::getline(inFile,buffer,'$'); i++)
+    for (unsigned int i = 0; std::getline(inFile,buffer,'$'); i++)
         // will read until getline fails and also reads in $ sign and skips it
     {
         
@@ -293,7 +293,7 @@ void saveEntry(int initialValues, std::string filename, std::vector<Entry> &inVe
         if(inVector[0].getIsExpense())
         { newFile << inVector[0].getReason() << ','; }
         newFile << inVector[0].getDate();
-        for (int i = 1; i < inVector.size(); i++)
+        for (unsigned int i = 1; i < inVector.size(); i++)
         {
             newFile << '\r' << '$' << inVector[i].getAmount() << ',';
             if(inVector[0].getIsExpense())
@@ -313,7 +313,7 @@ void saveEntry(int initialValues, std::string filename, std::vector<Entry> &inVe
     else
     {
         cout << "Writing changes to " << filename << "...\n";
-        for (int i = initialValues; i < inVector.size(); i++)
+        for (unsigned int i = initialValues; i < inVector.size(); i++)
         {
             inFile << '\r' << '$' << inVector[i].getAmount() << ',' << inVector[0].getReason() << ',' << inVector[i].getDate();
         }
@@ -330,7 +330,7 @@ int getAmountOfValues(std::string filename)
 {
     std::ifstream inFile(filename);
     std::string buffer;
-    int i;
+    unsigned int i;
     for (i = 0; std::getline(inFile, buffer, '\r'); i++)
         /* do nothing */;
     return i;
