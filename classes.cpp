@@ -38,8 +38,13 @@ Entry::Entry()
 // 'Entry' Destructor
 Entry::~Entry()
 {
-    //
+    if(reason)
+    {
+        delete reason;
+        reason = NULL;
+    }
 }
+
 // 'setDate' will check string for valid date input
 void Entry::setDate(std::string d){
     unsigned int size = (int)d.length();
