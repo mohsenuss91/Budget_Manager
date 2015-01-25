@@ -32,6 +32,7 @@ Entry::Entry()
 {
     amount = 0.0;
     date = "00/00/00";
+    reason = NULL;
     isExpense = false;
 }
 
@@ -88,18 +89,23 @@ void Entry::setAmount(float amnt){
 
 // 'printEntry' will output to screen an entries values formatted
 void Entry::printEntry(){
-    cout << left; // align left
-    cout << date;
-    cout << "   . .   $";
-    cout << fixed << setprecision(2)  << amount;
+    cout << right; // align left
+    cout << setw(8) << date;
+    cout << "  . . .  $";
+    
     if(isExpense)
     {
-    cout << " . .   ";
-    cout << *reason << endl;
+        cout << resetiosflags(std::ios::adjustfield); //reset alignment
+        cout << fixed << setprecision(2)  << setw(7) << left << amount;
+        cout << " . . .  ";
+        cout << *reason << endl;
     }
     else
+    {
+        cout << fixed << setprecision(2)  << amount;
         cout << endl;
-    cout << resetiosflags(std::ios::adjustfield); //realign right
+        cout << resetiosflags(std::ios::adjustfield); //reset alignment
+    }
 }
 
 // 'setReason' will dynamically allocate memory for reason string if Entry is an expense
@@ -149,7 +155,7 @@ void drawSubMenu(std::string category)
     cout << endl << "How will you modify " << category << ": ";
 }
 
-void submenuController(std::string vectorName, std::vector<Entry> &inVector, bool isExpense)
+void subMenuController(std::string vectorName, std::vector<Entry> &inVector, bool isExpense)
 {
     unsigned int inChoice = 0;
     char inChar;
@@ -160,7 +166,6 @@ void submenuController(std::string vectorName, std::vector<Entry> &inVector, boo
         cin.clear(); cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         if(inChoice == 1)
         {
-            
             inVector.push_back( inputEntry() );
             setChanged(vectorName);
             

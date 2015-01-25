@@ -50,11 +50,10 @@ int main(void)
     
     // initialize variables needed to run menu's
     unsigned int inChoice;
-    char inChar;
 
-    /* 
-    Prints out memory needed
-    cout << sizeof(string(40, 'a')) << "bytes per string, 400 emptry string would be " << sizeof(string(40, 'a'))*400/8 << " bytes" << endl;
+    /*
+    //Prints out memory needed
+    cout << sizeof("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa") << "bytes per string, 400 emptry string would be " << sizeof("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")*400/8 << " bytes" << endl;
     cout << sizeof(string*) << "bytes per string pointer, 400 emptry string pointers would be " <<  sizeof(string*)*400/8 << " kb" << endl; 
      */
     
@@ -69,235 +68,28 @@ int main(void)
             // Option #1 - Brings up editing menu for Checkings
             case 1 :
             {
-                    /*inChoice = 0;
-                    while (inChoice != 4)
-                    {
-                        drawSubMenu("Checkings");
-                        cin.clear(); cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                        cin >> inChoice;
-                        if(inChoice == 1)
-                        {
-                            
-                            checkings.push_back( inputEntry() );
-                            setChanged("Checkings");
-                            
-                        }
-                        else if (inChoice == 2)
-                        {
-                            cout << "Are you sure you want to remove last input? (Y/N): ";
-                            cin >>inChar;
-                            
-                            if (inChar == 'Y' || inChar == 'y')
-                            { 
-                                if(checkings.size() > 0)
-                                {
-                                    cout << "Removing last entry..." << endl;
-                                    checkings.pop_back();
-                                    setChanged("Checkings", true);
-                                }
-                                else
-                                {
-                                    cout << "NO ENTRIES REMAIN..." << endl;
-                                }
-                            }
-                            else
-                            {
-                                cout << "Returning to previous menu...\n";
-                            }
-                           
-                        }
-                        else if (inChoice == 3)
-                        {
-                            cout << "\nCHECKINGS\n";
-                            for (int i = 0; i < checkings.size(); i++)
-                            {
-                                cout << setw(3) << i+1 << ": ";
-                                checkings[i].printEntry();
-                            }
-                        }
-                        
-                        else if (inChoice == 4)
-                        { cout << "Returning to main menu...\n\n"; }
-                        
-                        else
-                        { cout << "Invalid Input.\n"; }
-                    }*/
-                submenuController("Checkings", checkings);
-                    break;
+                subMenuController("Checkings", checkings);
+                break;
             }
             
             // Option #2 - Brings up editing menu for Savings
             case 2 :
             {
-                /*inChoice = 0;
-                    while (inChoice != 4)
-                    {
-                        drawSubMenu("Savings");
-                        cin.clear(); cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                        cin >> inChoice;
-                        if(inChoice == 1)
-                        {
-                            savings.push_back( inputEntry() );
-                            setChanged("Savings");
-                        }
-                        else if (inChoice == 2)
-                        {
-                            cout << "Are you sure you want to remove last input? (Y/N): ";
-                            cin >>inChar;
-                            
-                            if (inChar == 'Y' || inChar == 'y')
-                            {
-                                if(savings.size() > 0)
-                                {
-                                    cout << "Removing last entry..." << endl;
-                                    savings.pop_back();
-                                    setChanged("Savings", true);
-                                }
-                                else
-                                {
-                                    cout << "NO ENTRIES REMAIN..." << endl;
-                                }
-                            }
-                            else
-                            {
-                                cout << "Returning to previous menu...\n";
-                            }
-                            
-                        }
-                        else if (inChoice == 3)
-                        {
-                            cout << "\nSAVINGS\n";
-                            for (int i = 0; i < savings.size(); i++)
-                            {
-                                cout << setw(2) << i+1 << ": ";
-                                savings[i].printEntry();
-                            }
-                        }
-                        
-                        else if (inChoice == 4)
-                        { cout << "Returning to main menu...\n\n"; }
-                        
-                        else
-                        { cout << "Invalid Input.\n"; }
-                    }*/
-                submenuController("Savings", savings);
+                subMenuController("Savings", savings);
                 break;
             }
             
             // Option #3 - Brings up editing menu for Expenses
             case 3 :
             {
-                /*inChoice = 0;
-                    while (inChoice != 4)
-                    {
-                        drawSubMenu("Expenses");
-                        
-                        cin >> inChoice;
-                        cin.clear(); cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                        if(inChoice == 1)
-                        {
-                            expenses.push_back( inputEntry( true) );
-                            setChanged("Expenses");
-                        }
-                        else if (inChoice == 2)
-                        {
-                            cout << "Are you sure you want to remove last input? (Y/N): ";
-                            cin >>inChar;
-                            
-                            if (inChar == 'Y' || inChar == 'y')
-                            {
-                                if(expenses.size() > 0)
-                                {
-                                    cout << "Removing last entry..." << endl;
-                                    expenses.pop_back();
-                                    setChanged("Expenses", true);
-                                }
-                                else
-                                {
-                                    cout << "NO ENTRIES REMAIN..." << endl;
-                                }
-                            }
-                            else
-                            {
-                                cout << "Returning to previous menu...\n";
-                            }
-                            
-                        }
-                        else if (inChoice == 3)
-                        {
-                            cout << "\nEXPENSES\n";
-                            for (int i = 0; i < expenses.size(); i++)
-                            {
-                                cout << setw(3) << i+1 << ": ";
-                                expenses[i].printEntry();
-                            }
-                        }
-                        
-                        else if (inChoice == 4)
-                        { cout << "Returning to main menu...\n\n"; }
-                        
-                        else
-                        { cout << "Invalid Input.\n"; }
-                    }*/
-                submenuController("Expenses", expenses, true);
+                subMenuController("Expenses", expenses, true);
                 break;
             }
                 
              // Option #4 - Brings up editing menu for Special Expenses
             case 4 :
             {
-                /*inChoice = 0;
-                    while (inChoice != 4)
-                    {
-                        drawSubMenu("Special Expenses");
-                        cin >> inChoice;
-                        cin.clear(); cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                        if(inChoice == 1)
-                        {
-                            specialExpenses.push_back( inputEntry( true) );
-                            setChanged("Special Expenses");
-                        }
-                        else if (inChoice == 2)
-                        {
-                            cout << "Are you sure you want to remove last input? (Y/N): ";
-                            cin >>inChar;
-                            
-                            if (inChar == 'Y' || inChar == 'y')
-                            {
-                                if(specialExpenses.size() > 0)
-                                {
-                                    cout << "Removing last entry..." << endl;
-                                    specialExpenses.pop_back();
-                                    setChanged("Special Expenses", true);
-                                }
-                                else
-                                {
-                                    cout << "NO ENTRIES REMAIN..." << endl;
-                                }
-                            }
-                            else
-                            {
-                                cout << "Returning to previous menu...\n";
-                            }
-                            
-                        }
-                        else if (inChoice == 3)
-                        {
-                            cout << "\nSPECIAL EXPENSES\n";
-                            for (int i = 0; i < specialExpenses.size(); i++)
-                            {
-                                cout << setw(2) << i+1 << ": ";
-                                specialExpenses[i].printEntry();
-                            }
-                        }
-                        
-                        else if (inChoice == 4)
-                        { cout << "Returning to main menu...\n\n"; }
-                        
-                        else
-                        { cout << "Invalid Input.\n"; }
-                    }*/
-                submenuController("Special Expenses", specialExpenses, true);
+                subMenuController("Special Expenses", specialExpenses, true);
                 break;
             }
                 

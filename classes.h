@@ -48,7 +48,7 @@ public:
 //Functions
 void drawMainMenu(void);
 void drawSubMenu(std::string);
-void submenuController(std::string, std::vector<Entry>&, bool isExpense = false);
+void subMenuController(std::string, std::vector<Entry>&, bool isExpense = false);
 
 void setChanged(std::string, bool deleteDone = false);
 bool isChanged(std::string);
