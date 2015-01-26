@@ -12,6 +12,9 @@
             /********************************************************************************
                                                     ToDo
              Load new format
+             Fix getAmountofValues
+             Indicate wrong format and skip if file cannot be loaded
+             Clean up save function
              Implement modify function
              Impement search for activity by specific date
              Impement search for activity by year
@@ -37,6 +40,11 @@ int main(void)
     const unsigned int NUMOFEXPENSES = getAmountOfValues("data/expenses.csv");
     const unsigned int NUMOFSPECIALEXPENSES = getAmountOfValues("data/specialexpenses.csv");
     
+    /*const unsigned int NUMOFCHECKINGS = 323;
+    const unsigned int NUMOFSAVINGS = 81;
+    const unsigned int NUMOFEXPENSES = 437;
+    const unsigned int NUMOFSPECIALEXPENSES = 11;*/
+    
     // initialize vector's needed to store all inputs
     vector<Entry> checkings(NUMOFCHECKINGS);
     vector<Entry> savings(NUMOFSAVINGS);
@@ -44,7 +52,7 @@ int main(void)
     vector<Entry> specialExpenses(NUMOFSPECIALEXPENSES);
     
     // loads files into memory
-    loadEntry("data/checkings.csv", checkings);
+    //loadEntry("data/checkings.csv", checkings);
     loadEntry("data/savings.csv", savings);
     loadEntry("data/expenses.csv", expenses, true);
     loadEntry("data/specialexpenses.csv", specialExpenses, true);

@@ -253,21 +253,49 @@ void loadEntry(std::string filename, std::vector<Entry> &inVector, bool isExpens
     {
         cout << "Error opening file named \"" << filename << "\". Nothing will be loaded from it.\n";
     }
-    for (unsigned int i = 0; std::getline(inFile,buffer,'$'); i++)
-        // will read until getline fails and also reads in $ sign and skips it
+    else
     {
-        
-        std::getline(inFile,buffer,',');
-        inVector[i].loadAmount(std::stod(buffer));
-        if(isExpense)
+        std::getline(inFile,buffer,'\n');
+        for (unsigned int i = 0; i < 100; i++)
         {
-            std::getline(inFile,buffer,',');
-            inVector[i].setReason(buffer);
+           
+            for (unsigned int j = inVector.size() / 100, k = 0, l; k <= j; k++)
+            {
+                cout << "i,k: " <<i<<", "<<k<<endl;
+                l = k*100;
+                if (i+l < inVector.size() && k<j)
+                {
+                    std::getline(inFile,buffer,',');
+                    cout << "date is: "<<buffer<<endl;
+                    inVector[i+l].loadDate(buffer);
+                    if(isExpense)
+                    {
+                        std::getline(inFile,buffer,',');
+                        inVector[i+l].setReason(buffer);
+                    }
+                    std::getline(inFile,buffer,'$');
+                    std::getline(inFile,buffer,',');
+                    inVector[i+l].loadAmount(std::stod(buffer));
+                    std::getline(inFile,buffer,',');
+                }
+                if (i+l < inVector.size() && k==j)
+                {
+                    std::getline(inFile,buffer,',');
+                    inVector[i+l].loadDate(buffer);
+                    if(isExpense)
+                    {
+                        std::getline(inFile,buffer,',');
+                        inVector[i+l].setReason(buffer);
+                    }
+                    std::getline(inFile,buffer,'$');
+                    std::getline(inFile,buffer,'\n');
+                    inVector[i+l].loadAmount(std::stod(buffer));
+                }
+            }
         }
-        std::getline(inFile,buffer,'\r');
-        inVector[i].loadDate(buffer);
     }
-    inFile.close();
+    
+    
 }
 
 // 'saveEntry' will write any changes in appropiate vector to the file
@@ -344,9 +372,10 @@ int getAmountOfValues(std::string filename)
     std::ifstream inFile(filename);
     std::string buffer;
     unsigned int i;
-    for (i = 0; std::getline(inFile, buffer, '\r'); i++)
+    for (i = 0; std::getline(inFile, buffer, '$'); i++)
         /* do nothing */;
-    return i;
+    cout << "Num of values: " <<i-1 << endl;
+    return i-1; //why minus 1??
 }
 
 
