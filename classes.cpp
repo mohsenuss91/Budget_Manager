@@ -181,7 +181,7 @@ void subMenuController(std::string vectorName, std::vector<Entry> &inVector, boo
                 {
                     cout << "Removing last entry..." << endl;
                     inVector.pop_back();
-                    setChanged(vectorName, isExpense);
+                    setChanged(vectorName, true);
                 }
                 else
                 {
@@ -288,17 +288,30 @@ void saveEntry(int initialValues, std::string filename, std::vector<Entry> &inVe
         
         cout << "Deleting changes to " << filename << "...\n";
         
-        //write the first entry without a newline and with a newline inside the for loop
-        newFile << '$' << inVector[0].getAmount() << ',';
-        if(inVector[0].getIsExpense())
-        { newFile << inVector[0].getReason() << ','; }
-        newFile << inVector[0].getDate();
-        for (unsigned int i = 1; i < inVector.size(); i++)
+        //Writes the headers
+        for (unsigned int i = 0, j = (inVector.size() / 100) + 1; i<j;i++)
         {
-            newFile << '\r' << '$' << inVector[i].getAmount() << ',';
-            if(inVector[0].getIsExpense())
-            { newFile << inVector[i].getReason() << ','; }
-            newFile << inVector[i].getDate();
+            newFile << "Date,Amount,,";
+        }
+        for (unsigned int i = 0; i < 100; i++)
+        {
+            newFile << '\r';
+            for (unsigned int j = inVector.size() / 100, k = 0, l; k <= j; k++)
+            {
+                l = k*100;
+                if (i+l > inVector.size())
+                {
+                    newFile << ",,";
+                }
+                else
+                {
+                    newFile << inVector[i+l].getDate() << ',';
+                    if(inVector[0].getIsExpense())
+                    { newFile << inVector[i+l].getReason() << ','; }
+                    newFile << '$' << inVector[i+l].getAmount() << ',';
+                }
+                newFile << ",";
+            }
         }
         
         //close all files

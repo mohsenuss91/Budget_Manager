@@ -11,11 +11,12 @@
 
             /********************************************************************************
                                                     ToDo
-             Fix print out
-             Factor out cases into functions
-             Add Titles to csv
-             Skip Over titles in load (maybe save)
-             Implement view function that allows manual input.
+             Load new format
+             Implement modify function
+             Impement search for activity by specific date
+             Impement search for activity by year
+             Impement search for activity by reason
+             Impement search for activity by amount
             **********************************************************************************/
 
 #include <iostream>
