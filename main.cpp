@@ -12,7 +12,6 @@
             /********************************************************************************
                                                     ToDo
              Indicate wrong format and skip if file cannot be loaded
-             Implement modify function
              Impement search for activity by specific date
              Impement search for activity by year
              Impement search for activity by reason

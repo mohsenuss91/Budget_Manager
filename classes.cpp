@@ -31,6 +31,7 @@ static bool deleteWasDone = false;
 Entry::Entry()
 {
     amount = 0.0;
+    searchID = 0;
     date = "00/00/00";
     reason = NULL;
     isExpense = false;
@@ -87,6 +88,41 @@ void Entry::setAmount(float amnt){
     amount = amnt;
 }
 
+void Entry::calculateSearchID(void){
+    string date = getDate();
+    unsigned short switcher = 0;
+    char buffer[3];
+    
+    for (int dCursor = 0, bCursor = 0; dCursor != date.length()+1; dCursor++)
+    {
+        if (bCursor > 2 || switcher > 2)
+        {
+            cout << "Stepped over buffer's or switcher's boundaries! Aborting 'calculateSearchID!'";
+            cout << " Date was " << date << endl;
+            break;
+        }
+        if (date[dCursor] == '/' || dCursor == date.length())
+        {
+            if(switcher == 0)
+                searchID += (atoi(buffer) * 100);
+            if(switcher == 1)
+                searchID += (atoi(buffer) * 1);
+            if(switcher == 2)
+                searchID += (atoi(buffer) * 10000);
+            switcher++;
+            bCursor = 0;
+            buffer[0] = '\0';
+            buffer[1] = '\0';
+            buffer[2] = '\0';
+        }
+        else
+        {
+            buffer[bCursor] = date[dCursor];
+            bCursor++;
+        }
+    }
+}
+
 // 'printEntry' will output to screen an entries values formatted
 void Entry::printEntry(){
     cout << right; // align left
@@ -110,6 +146,7 @@ void Entry::printEntry(){
         cout << endl;
         cout << resetiosflags(std::ios::adjustfield); //reset alignment
     }
+    // print out the searchID cout << "Search ID: " << getSearchID() << endl;
 }
 
 // 'setReason' will dynamically allocate memory for reason string if Entry is an expense
@@ -151,9 +188,9 @@ void drawSubMenu(std::string category)
     "\t\t*                             *\n"\
     "\t\t*   (1) Add Input             *\n"
     "\t\t*   (2) Remove Input          *\n"
-    "\t\t*   (?) Modify Input          *\n"
-    "\t\t*   (3) View All              *\n"
-    "\t\t*   (4) Return to main menu   *\n"
+    "\t\t*   (3) Modify Input          *\n"
+    "\t\t*   (4) View All              *\n"
+    "\t\t*   (5) Return to main menu   *\n"
     "\t\t*                             *\n"
     "\t\t*******************************\n";
     
@@ -164,7 +201,7 @@ void subMenuController(std::string vectorName, std::vector<Entry> &inVector, boo
 {
     unsigned int inChoice = 0;
     char inChar;
-    while (inChoice != 4)
+    while (inChoice != 5)
     {
         drawSubMenu(vectorName);
         cin >> inChoice;
@@ -201,6 +238,23 @@ void subMenuController(std::string vectorName, std::vector<Entry> &inVector, boo
         }
         else if (inChoice == 3)
         {
+            //valueToModify will need to be downset by 1 to compensate for 'printEntry' adding 1
+            unsigned int valueToModify;
+            
+            cout << "Enter number of input to modify or 0 to see all inputs: ";
+            cin >> valueToModify;
+            
+            cout << "Current values are: ";
+            inVector[valueToModify-1].printEntry();
+            
+            inVector[valueToModify-1] = inputEntry();
+            setChanged(vectorName, isExpense);
+            
+            cout << "New values are: ";
+            inVector[valueToModify-1].printEntry();
+        }
+        else if (inChoice == 4)
+        {
             cout << "\n" << vectorName << "\n";
             for (unsigned int i = 0; i < inVector.size(); i++)
             {
@@ -209,7 +263,7 @@ void subMenuController(std::string vectorName, std::vector<Entry> &inVector, boo
             }
         }
         
-        else if (inChoice == 4)
+        else if (inChoice == 5)
         { cout << "Returning to main menu...\n\n"; }
         
         else
@@ -273,6 +327,7 @@ void loadEntry(std::string filename, std::vector<Entry> &inVector, bool isExpens
             }
             std::getline(inFile,buffer,'\r');
             inVector[i].loadDate(buffer);
+            inVector[i].calculateSearchID();
         }
         inFile.close();
     }
@@ -316,7 +371,7 @@ void saveEntry(int initialValues, std::string filename, std::vector<Entry> &inVe
         //erase original file and rename new file to original file
         remove( filename.c_str() );
         rename( newFilename.c_str(), filename.c_str() );
-
+        
     }
     else
     {
@@ -340,7 +395,7 @@ int getAmountOfValues(std::string filename)
     std::string buffer;
     unsigned int i;
     for (i = 0; std::getline(inFile, buffer, '\r'); i++)
-        /* do nothing */;
+    /* do nothing */;
     return i;
 }
 

@@ -18,6 +18,7 @@
 class Entry{
 protected:
     float amount;
+    unsigned int searchID;
     std::string date;
     std::string* reason;
     bool isExpense;
@@ -27,6 +28,7 @@ public:
     void setDate(std::string);
     void setAmount(float amnt);
     void setReason(std::string);
+    void calculateSearchID(void);
     void printEntry(void);
     
     //inline methods
@@ -36,6 +38,8 @@ public:
         { return date; }
     float getAmount(void)
         { return amount; }
+    unsigned int getSearchID(void)
+        { return searchID; }
     bool getIsExpense(void)
         { return isExpense; }
     void loadDate(std::string d)
