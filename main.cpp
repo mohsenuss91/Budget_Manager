@@ -11,11 +11,12 @@
 
             /********************************************************************************
                                                     ToDo
-             Fix print out
-             Factor out cases into functions
-             Add Titles to csv
-             Skip Over titles in load (maybe save)
-             Implement view function that allows manual input.
+             Indicate wrong format and skip if file cannot be loaded
+             Implement modify function
+             Impement search for activity by specific date
+             Impement search for activity by year
+             Impement search for activity by reason
+             Impement search for activity by amount
             **********************************************************************************/
 
 #include <iostream>
@@ -53,8 +54,8 @@ int main(void)
 
     
     //Prints out memory needed
-    cout << sizeof("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa") << "bytes per string, 400 emptry string would be " << sizeof("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")*400/8 << " bytes" << endl;
-    cout << sizeof(string*) << "bytes per string pointer, 400 emptry string pointers would be " <<  sizeof(string*)*400/8 << " kb" << endl; 
+    /*cout << sizeof("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa") << "bytes per string, 400 emptry string would be " << sizeof("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")*400/8 << " bytes" << endl;
+    cout << sizeof(string*) << "bytes per string pointer, 400 emptry string pointers would be " <<  sizeof(string*)*400/8 << " kb" << endl; */
      
     
     do
@@ -97,27 +98,44 @@ int main(void)
             case 5 :
             {
                 cout << "\nCHECKINGS\n";
+                cout << " ____________________________" << endl;
+                cout << "|  #  |   DATE    |  AMOUNT  |" << endl;
                 for (unsigned int i = checkings.size()-20;i<checkings.size(); i++) {
-                    cout << setw(3) << i+1 << ": ";
+                    cout << "| ";
+                    cout << setw(3) << i+1 << " ";
                     checkings[i].printEntry();
                 }
+                cout << " ----------------------------" << endl;
                 
                 cout << "\nSAVINGS\n";
+                cout << " ___________________________" << endl;
+                cout << "|  # |   DATE    |  AMOUNT  |" << endl;
                 for (unsigned int i = savings.size()-20;i<savings.size(); i++) {
-                    cout << setw(2) << i+1 << ": ";
+                    cout << "| ";
+                    cout << setw(2) << i+1 << " ";
                     savings[i].printEntry();
                 }
+                cout << " ---------------------------" << endl;
+                
                 cout << "\nEXPENSES\n";
+                cout << " ________________________________________________________________________________" << endl;
+                cout << "|  #  |   DATE    |  AMOUNT    |    REASON                                       |" << endl;
                 for (unsigned int i = expenses.size()-20;i<expenses.size(); i++) {
-                    cout << setw(3) << i+1 << ": ";
+                    cout << "| ";
+                    cout << setw(3) << i+1 << " ";
                     expenses[i].printEntry();
                 }
+                cout << " --------------------------------------------------------------------------------" << endl;
                 
                 cout << "\nSPECIALEXPENSES\n";
+                cout << " _______________________________________________________________________________" << endl;
+                cout << "| #  |   DATE    |  AMOUNT    |    REASON                                       |" << endl;
                 for (unsigned int i = specialExpenses.size()-8;i<specialExpenses.size(); i++) {
-                    cout << setw(2) << i+1 << ": ";
+                    cout << "| ";
+                    cout << setw(2) << i+1 << " ";
                     specialExpenses[i].printEntry();
                 }
+                cout << " -------------------------------------------------------------------------------" << endl;
                 
                 cin.ignore();
                 cout << endl << "Press [ENTER] to continue...";

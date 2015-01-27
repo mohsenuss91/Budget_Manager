@@ -90,19 +90,23 @@ void Entry::setAmount(float amnt){
 // 'printEntry' will output to screen an entries values formatted
 void Entry::printEntry(){
     cout << right; // align left
+    cout << "| ";
     cout << setw(8) << date;
-    cout << "  . . .  $";
+    cout << "  |  $";
     
     if(isExpense)
     {
         cout << resetiosflags(std::ios::adjustfield); //reset alignment
         cout << fixed << setprecision(2)  << setw(7) << left << amount;
-        cout << " . . .  ";
-        cout << *reason << endl;
+        cout << "  |   ";
+        cout << setw(45) << *reason;
+        cout << " |" << endl;
     }
     else
     {
-        cout << fixed << setprecision(2)  << amount;
+        cout << resetiosflags(std::ios::adjustfield);
+        cout << fixed << setprecision(2)  <<setw(6) << left << amount;
+        cout << " |";
         cout << endl;
         cout << resetiosflags(std::ios::adjustfield); //reset alignment
     }
@@ -147,6 +151,7 @@ void drawSubMenu(std::string category)
     "\t\t*                             *\n"\
     "\t\t*   (1) Add Input             *\n"
     "\t\t*   (2) Remove Input          *\n"
+    "\t\t*   (?) Modify Input          *\n"
     "\t\t*   (3) View All              *\n"
     "\t\t*   (4) Return to main menu   *\n"
     "\t\t*                             *\n"
@@ -199,7 +204,7 @@ void subMenuController(std::string vectorName, std::vector<Entry> &inVector, boo
             cout << "\n" << vectorName << "\n";
             for (unsigned int i = 0; i < inVector.size(); i++)
             {
-                cout << setw(3) << i+1 << ": ";
+                cout << setw(3) << i+1 << " ";
                 inVector[i].printEntry();
             }
         }
@@ -253,21 +258,24 @@ void loadEntry(std::string filename, std::vector<Entry> &inVector, bool isExpens
     {
         cout << "Error opening file named \"" << filename << "\". Nothing will be loaded from it.\n";
     }
-    for (unsigned int i = 0; std::getline(inFile,buffer,'$'); i++)
-        // will read until getline fails and also reads in $ sign and skips it
+    else
     {
-        
-        std::getline(inFile,buffer,',');
-        inVector[i].loadAmount(std::stod(buffer));
-        if(isExpense)
+        for (unsigned int i = 0; std::getline(inFile,buffer,'$'); i++)
+            // will read until getline fails and also reads in $ sign and skips it
         {
+            
             std::getline(inFile,buffer,',');
-            inVector[i].setReason(buffer);
+            inVector[i].loadAmount(std::stod(buffer));
+            if(isExpense)
+            {
+                std::getline(inFile,buffer,',');
+                inVector[i].setReason(buffer);
+            }
+            std::getline(inFile,buffer,'\r');
+            inVector[i].loadDate(buffer);
         }
-        std::getline(inFile,buffer,'\r');
-        inVector[i].loadDate(buffer);
+        inFile.close();
     }
-    inFile.close();
 }
 
 // 'saveEntry' will write any changes in appropiate vector to the file
