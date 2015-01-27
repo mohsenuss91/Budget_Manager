@@ -11,15 +11,11 @@
 
             /********************************************************************************
                                                     ToDo
-             Load new format
-             Fix getAmountofValues
-             Indicate wrong format and skip if file cannot be loaded
-             Clean up save function
-             Implement modify function
-             Impement search for activity by specific date
-             Impement search for activity by year
-             Impement search for activity by reason
-             Impement search for activity by amount
+             Fix print out
+             Factor out cases into functions
+             Add Titles to csv
+             Skip Over titles in load (maybe save)
+             Implement view function that allows manual input.
             **********************************************************************************/
 
 #include <iostream>
@@ -35,15 +31,10 @@ using namespace std;
 int main(void)
 {
     // variables needed to initialize right amount of entries at startup
-    const unsigned int NUMOFCHECKINGS = getAmountOfValues("data/checkings.csv");
-    const unsigned int NUMOFSAVINGS = getAmountOfValues("data/savings.csv");
-    const unsigned int NUMOFEXPENSES = getAmountOfValues("data/expenses.csv");
-    const unsigned int NUMOFSPECIALEXPENSES = getAmountOfValues("data/specialexpenses.csv");
-    
-    /*const unsigned int NUMOFCHECKINGS = 323;
-    const unsigned int NUMOFSAVINGS = 81;
-    const unsigned int NUMOFEXPENSES = 437;
-    const unsigned int NUMOFSPECIALEXPENSES = 11;*/
+    const int NUMOFCHECKINGS = getAmountOfValues("data/checkings.csv");
+    const int NUMOFSAVINGS = getAmountOfValues("data/savings.csv");
+    const int NUMOFEXPENSES = getAmountOfValues("data/expenses.csv");
+    const int NUMOFSPECIALEXPENSES = getAmountOfValues("data/specialexpenses.csv");
     
     // initialize vector's needed to store all inputs
     vector<Entry> checkings(NUMOFCHECKINGS);
@@ -52,7 +43,7 @@ int main(void)
     vector<Entry> specialExpenses(NUMOFSPECIALEXPENSES);
     
     // loads files into memory
-    //loadEntry("data/checkings.csv", checkings);
+    loadEntry("data/checkings.csv", checkings);
     loadEntry("data/savings.csv", savings);
     loadEntry("data/expenses.csv", expenses, true);
     loadEntry("data/specialexpenses.csv", specialExpenses, true);
@@ -60,11 +51,11 @@ int main(void)
     // initialize variables needed to run menu's
     unsigned int inChoice;
 
-    /*
+    
     //Prints out memory needed
     cout << sizeof("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa") << "bytes per string, 400 emptry string would be " << sizeof("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")*400/8 << " bytes" << endl;
     cout << sizeof(string*) << "bytes per string pointer, 400 emptry string pointers would be " <<  sizeof(string*)*400/8 << " kb" << endl; 
-     */
+     
     
     do
     {
