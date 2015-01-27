@@ -11,10 +11,9 @@
 
             /********************************************************************************
                                                     ToDo
-             Load new format
-             Fix getAmountofValues
+             Fix appending write
+             Clean load & save functions
              Indicate wrong format and skip if file cannot be loaded
-             Clean up save function
              Implement modify function
              Impement search for activity by specific date
              Impement search for activity by year
@@ -52,7 +51,7 @@ int main(void)
     vector<Entry> specialExpenses(NUMOFSPECIALEXPENSES);
     
     // loads files into memory
-    //loadEntry("data/checkings.csv", checkings);
+    loadEntry("data/checkings.csv", checkings);
     loadEntry("data/savings.csv", savings);
     loadEntry("data/expenses.csv", expenses, true);
     loadEntry("data/specialexpenses.csv", specialExpenses, true);

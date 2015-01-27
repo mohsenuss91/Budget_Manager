@@ -255,18 +255,22 @@ void loadEntry(std::string filename, std::vector<Entry> &inVector, bool isExpens
     }
     else
     {
+        
+        
+        
         std::getline(inFile,buffer,'\n');
-        for (unsigned int i = 0; i < 100; i++)
+        unsigned int columns = (inVector.size() / 100);
+        for (unsigned int i = 0, size = inVector.size(); i < 100 && i < size; i++)
         {
            
-            for (unsigned int j = inVector.size() / 100, k = 0, l; k <= j; k++)
+            for (unsigned int j = 0; j <= columns; j++)
             {
-                cout << "i,k: " <<i<<", "<<k<<endl;
-                l = k*100;
-                if (i+l < inVector.size() && k<j)
+                //cout << "i,k: " <<i<<", "<<k<<" .";
+                unsigned int l = j*100;
+                if (i+l < inVector.size() && j < columns)
                 {
                     std::getline(inFile,buffer,',');
-                    cout << "date is: "<<buffer<<endl;
+                    //cout << "date is: "<<buffer<<endl;
                     inVector[i+l].loadDate(buffer);
                     if(isExpense)
                     {
@@ -278,7 +282,7 @@ void loadEntry(std::string filename, std::vector<Entry> &inVector, bool isExpens
                     inVector[i+l].loadAmount(std::stod(buffer));
                     std::getline(inFile,buffer,',');
                 }
-                if (i+l < inVector.size() && k==j)
+                else if (i+l < inVector.size() && j == columns)
                 {
                     std::getline(inFile,buffer,',');
                     inVector[i+l].loadDate(buffer);
@@ -290,6 +294,11 @@ void loadEntry(std::string filename, std::vector<Entry> &inVector, bool isExpens
                     std::getline(inFile,buffer,'$');
                     std::getline(inFile,buffer,'\n');
                     inVector[i+l].loadAmount(std::stod(buffer));
+                    //cout << "amount is: " << buffer << endl;
+                }
+                else
+                {
+                    std::getline(inFile,buffer,'\n');
                 }
             }
         }
@@ -304,7 +313,9 @@ void saveEntry(int initialValues, std::string filename, std::vector<Entry> &inVe
     std::ofstream inFile(filename, ios::app);
     
     if (!inFile)
-    {cout << "Error opening file named \"" << filename << "\". New file will be made.\n";}
+    {
+        cout << "Error opening file named \"" << filename << "\". New file will be made.\n";
+    }
     
     
     //checks if values were added or subtracted and either appends or writes new file as a result
@@ -316,29 +327,41 @@ void saveEntry(int initialValues, std::string filename, std::vector<Entry> &inVe
         
         cout << "Deleting changes to " << filename << "...\n";
         
+        unsigned int columns = (inVector.size() / 100) + 1;
         //Writes the headers
-        for (unsigned int i = 0, j = (inVector.size() / 100) + 1; i<j;i++)
+        for (unsigned int i = 0; i < columns;i++)
         {
-            newFile << "Date,Amount,,";
+            if (inVector[0].getIsExpense())
+                { newFile << "DATE,REASON,COST"; }
+            else
+                { newFile << "DATE,AMOUNT"; }
+            if(i+1 < columns)
+            { newFile << ",,"; }
         }
-        for (unsigned int i = 0; i < 100; i++)
+        for (unsigned int i = 0, size = inVector.size(); i < 100 && i < size; i++)
         {
-            newFile << '\r';
-            for (unsigned int j = inVector.size() / 100, k = 0, l; k <= j; k++)
+            newFile << '\n';
+            for (unsigned int j = 0; j < columns; j++)
             {
-                l = k*100;
-                if (i+l > inVector.size())
+                unsigned int columnToWriteIn = j*100;
+                if (i+columnToWriteIn >= inVector.size())
                 {
                     newFile << ",,";
                 }
                 else
                 {
-                    newFile << inVector[i+l].getDate() << ',';
+                    newFile << inVector[i+columnToWriteIn].getDate();
+                    newFile << ',';
                     if(inVector[0].getIsExpense())
-                    { newFile << inVector[i+l].getReason() << ','; }
-                    newFile << '$' << inVector[i+l].getAmount() << ',';
+                    { newFile << inVector[i+columnToWriteIn].getReason();
+                        newFile << ','; }
+                    newFile << '$';
+                    newFile << inVector[i+columnToWriteIn].getAmount();
                 }
-                newFile << ",";
+                if (j+1 != columns)
+                {
+                    newFile << ",,";
+                }
             }
         }
         
@@ -356,7 +379,7 @@ void saveEntry(int initialValues, std::string filename, std::vector<Entry> &inVe
         cout << "Writing changes to " << filename << "...\n";
         for (unsigned int i = initialValues; i < inVector.size(); i++)
         {
-            inFile << '\r' << '$' << inVector[i].getAmount() << ',' << inVector[0].getReason() << ',' << inVector[i].getDate();
+            inFile << '\n' << '$' << inVector[i].getAmount() << ',' << inVector[0].getReason() << ',' << inVector[i].getDate();
         }
         inFile.close();
     }
