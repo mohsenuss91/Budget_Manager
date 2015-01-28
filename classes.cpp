@@ -200,6 +200,7 @@ void drawSubMenu(std::string category)
     "\t\t*   (2) Remove Input          *\n"
     "\t\t*   (3) Modify Input          *\n"
     "\t\t*   (4) View All              *\n"
+    "\t\t*   (5) Search by date        *\n"
     "\t\t*                             *\n"
     "\t\t*******************************\n";
     
@@ -270,6 +271,15 @@ void subMenuController(std::string vectorName, std::vector<Entry> &inVector, boo
                 cout << setw(3) << i+1 << " ";
                 inVector[i].printEntry();
             }
+        }
+        else if (inChoice == 5)
+        {
+            std::string date;
+            cout << "Enter the date: ";
+            cin >> date;
+            cout << "Searching for entries in " << vectorName << " on " << date << "..." << endl;
+            cout << "Results:" << endl;
+            searchVector(inVector, date);
         }
         
         else if (inChoice == 0)
@@ -395,6 +405,16 @@ void saveEntry(int initialValues, std::string filename, std::vector<Entry> &inVe
 
 
 
+
+
+void searchVector(std::string vectorName, std::vector<Entry>& inVector, std::string date) //by date
+{
+    
+    inVector[0].printEntry();
+    
+}
+
+// 'printVector' will print out an optional amount of values (default is 20)
 void printVector(std::string vectorName, std::vector<Entry> &inVector, int amountToPrint)
 {
     unsigned int vectorSize = inVector.size();
@@ -425,8 +445,6 @@ void printVector(std::string vectorName, std::vector<Entry> &inVector, int amoun
     else
         cout << " ----------------------------" << endl;
 }
-
-
 
 // 'getAmountOfValues' returns the number of lines in a file
 int getAmountOfValues(std::string filename)

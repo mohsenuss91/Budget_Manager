@@ -14,7 +14,7 @@
 #include <iomanip> //include for setting decimal precision
 #include <vector>
 
-// Entry - Parent Class
+// Entry - Main Class
 class Entry{
 protected:
     float amount;
@@ -50,7 +50,6 @@ public:
 };
 
 //Functions
-void printVector(std::string, std::vector<Entry>&, int amountToPrint = 20);
 void drawMainMenu(void);
 void drawSubMenu(std::string);
 void subMenuController(std::string, std::vector<Entry>&, bool isExpense = false);
@@ -58,7 +57,11 @@ void subMenuController(std::string, std::vector<Entry>&, bool isExpense = false)
 void setChanged(std::string, bool deleteDone = false);
 bool isChanged(std::string);
 
+void searchVector(std::vector<Entry>&, int); //by year
+void searchVector(std::vector<Entry>&, std::string); //by date
+void printVector(std::string, std::vector<Entry>&, int amountToPrint = 20);
 int getAmountOfValues(std::string);
+
 Entry inputEntry(bool isExpense = false);
 void loadEntry(std::string, std::vector<Entry>&, bool isExpense = false);
 void saveEntry(int, std::string, std::vector<Entry>&);

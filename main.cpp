@@ -11,11 +11,11 @@
 
             /********************************************************************************
                                                     ToDo
-             Indicate wrong format and skip if file cannot be loaded
              Impement search for activity by specific date with binary search
              Impement search for activity by year
              Impement search for activity by reason
              Impement search for activity by amount
+             Indicate wrong format and skip if file cannot be loaded
             **********************************************************************************/
 
 #include <iostream>
@@ -30,6 +30,26 @@ using namespace std;
 
 int main(void)
 {
+    
+    // variables needed to initialize right amount of entries at startup
+    const int NUMOFCHECKINGS = getAmountOfValues("/Users/Ivan/Code/Budget_Manager/data/checkings.csv");
+    const int NUMOFSAVINGS = getAmountOfValues("/Users/Ivan/Code/Budget_Manager/data/savings.csv");
+    const int NUMOFEXPENSES = getAmountOfValues("/Users/Ivan/Code/Budget_Manager/data/expenses.csv");
+    const int NUMOFSPECIALEXPENSES = getAmountOfValues("/Users/Ivan/Code/Budget_Manager/data/specialexpenses.csv");
+    
+    // initialize vector's needed to store all inputs
+    vector<Entry> checkings(NUMOFCHECKINGS);
+    vector<Entry> savings(NUMOFSAVINGS);
+    vector<Entry> expenses(NUMOFEXPENSES);
+    vector<Entry> specialExpenses(NUMOFSPECIALEXPENSES);
+    
+    // loads files into memory
+    loadEntry("/Users/Ivan/Code/Budget_Manager/data/checkings.csv", checkings);
+    loadEntry("/Users/Ivan/Code/Budget_Manager/data/savings.csv", savings);
+    loadEntry("/Users/Ivan/Code/Budget_Manager/data/expenses.csv", expenses, true);
+    loadEntry("/Users/Ivan/Code/Budget_Manager/data/specialexpenses.csv", specialExpenses, true);
+    
+    /* START uncomment on none mac devices
     // variables needed to initialize right amount of entries at startup
     const int NUMOFCHECKINGS = getAmountOfValues("data/checkings.csv");
     const int NUMOFSAVINGS = getAmountOfValues("data/savings.csv");
@@ -47,6 +67,7 @@ int main(void)
     loadEntry("data/savings.csv", savings);
     loadEntry("data/expenses.csv", expenses, true);
     loadEntry("data/specialexpenses.csv", specialExpenses, true);
+     END */
     
     // initialize variables needed to run menu's
     unsigned int inChoice;
@@ -96,55 +117,10 @@ int main(void)
              // Option #5 - Views last 20 inputs of all vectors
             case 5 :
             {
-//                cout << "\nCHECKINGS\n";
-//                cout << " ____________________________" << endl;
-//                cout << "|  #  |   DATE    |  AMOUNT  |" << endl;
-//                for (unsigned int i = checkings.size()-20;i<checkings.size(); i++) {
-//                    cout << "| ";
-//                    cout << setw(3) << i+1 << " ";
-//                    checkings[i].printEntry();
-//                }
-//                cout << " ----------------------------" << endl;
-//                
-//                
-//                cout << "\nSAVINGS\n";
-//                cout << " ___________________________" << endl;
-//                cout << "|  # |   DATE    |  AMOUNT  |" << endl;
-//                for (unsigned int i = savings.size()-20;i<savings.size(); i++) {
-//                    cout << "| ";
-//                    cout << setw(2) << i+1 << " ";
-//                    savings[i].printEntry();
-//                }
-//                cout << " ---------------------------" << endl;
-                
-                
                 printVector("CHECKINGS", checkings);
                 printVector("SAVINGS", savings);
-                
                 printVector("EXPENSES", expenses);
                 printVector("SPECIAL EXPENSES", specialExpenses, 8);
-                
-
-//                cout << "\nEXPENSES\n";
-//                cout << " ________________________________________________________________________________" << endl;
-//                cout << "|  #  |   DATE    |  AMOUNT    |    REASON                                       |" << endl;
-//                for (unsigned int i = expenses.size()-20;i<expenses.size(); i++) {
-//                    cout << "| ";
-//                    cout << setw(3) << i+1 << " ";
-//                    expenses[i].printEntry();
-//                }
-//                cout << " --------------------------------------------------------------------------------" << endl;
-//                
-//                cout << "\nSPECIALEXPENSES\n";
-//                cout << " _______________________________________________________________________________" << endl;
-//                cout << "| #  |   DATE    |  AMOUNT    |    REASON                                       |" << endl;
-//                for (unsigned int i = specialExpenses.size()-8;i<specialExpenses.size(); i++) {
-//                    cout << "| ";
-//                    cout << setw(2) << i+1 << " ";
-//                    specialExpenses[i].printEntry();
-//                }
-//                cout << " -------------------------------------------------------------------------------" << endl;
-                
                 
                 cin.ignore();
                 cout << endl << "Press [ENTER] to continue...";
@@ -160,7 +136,7 @@ int main(void)
                 if(!isChanged("Checkings") && !isChanged("Savings")
                  && !isChanged("Expenses") && !isChanged("Special Expenses"))
                 {
-                    cout << "Nothing to save...\n";
+                    cout << "No changes to save...\n";
                 }
                 else
                 {
