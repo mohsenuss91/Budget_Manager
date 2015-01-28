@@ -50,6 +50,7 @@ public:
 };
 
 //Functions
+void printVector(std::string, std::vector<Entry>&, int amountToPrint = 20);
 void drawMainMenu(void);
 void drawSubMenu(std::string);
 void subMenuController(std::string, std::vector<Entry>&, bool isExpense = false);

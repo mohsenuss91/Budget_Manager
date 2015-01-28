@@ -88,6 +88,7 @@ void Entry::setAmount(float amnt){
     amount = amnt;
 }
 
+// 'calculateSearchID creates a almost unique ID for every input allowing for efficient search
 void Entry::calculateSearchID(void){
     string date = getDate();
     unsigned short switcher = 0;
@@ -97,12 +98,18 @@ void Entry::calculateSearchID(void){
     {
         if (bCursor > 2 || switcher > 2)
         {
-            cout << "Stepped over buffer's or switcher's boundaries! Aborting 'calculateSearchID!'";
-            cout << " Date was " << date << endl;
+            if (date == "BONUS")
+                {searchID = 122500;} //Christmas Bonus, what should ID be?
+            else
+            {
+                cout << "Stepped over buffer's or switcher's boundaries! Aborting 'calculateSearchID!'";
+                cout << " Date was " << date << endl;
+            }
             break;
         }
         if (date[dCursor] == '/' || dCursor == date.length())
         {
+            //ID is generated putting together the date in the order of year,month,day.
             if(switcher == 0)
                 searchID += (atoi(buffer) * 100);
             if(switcher == 1)
@@ -110,6 +117,8 @@ void Entry::calculateSearchID(void){
             if(switcher == 2)
                 searchID += (atoi(buffer) * 10000);
             switcher++;
+            
+            //resets bCursor and buffer values
             bCursor = 0;
             buffer[0] = '\0';
             buffer[1] = '\0';
@@ -125,7 +134,7 @@ void Entry::calculateSearchID(void){
 
 // 'printEntry' will output to screen an entries values formatted
 void Entry::printEntry(){
-    cout << right; // align left
+    cout << right; // align right
     cout << "| ";
     cout << setw(8) << date;
     cout << "  |  $";
@@ -146,7 +155,7 @@ void Entry::printEntry(){
         cout << endl;
         cout << resetiosflags(std::ios::adjustfield); //reset alignment
     }
-    // print out the searchID cout << "Search ID: " << getSearchID() << endl;
+    //cout << "Search ID: " << getSearchID() << endl; //print out the searchID
 }
 
 // 'setReason' will dynamically allocate memory for reason string if Entry is an expense
@@ -185,12 +194,12 @@ void drawMainMenu(void)
 void drawSubMenu(std::string category)
 {
     cout << "\n\t\t*******************************\n"
-    "\t\t*                             *\n"\
+    "\t\t*                             *\n"
+    "\t\t*   (M) Main Menu             *\n"
     "\t\t*   (1) Add Input             *\n"
     "\t\t*   (2) Remove Input          *\n"
     "\t\t*   (3) Modify Input          *\n"
     "\t\t*   (4) View All              *\n"
-    "\t\t*   (5) Return to main menu   *\n"
     "\t\t*                             *\n"
     "\t\t*******************************\n";
     
@@ -199,9 +208,9 @@ void drawSubMenu(std::string category)
 
 void subMenuController(std::string vectorName, std::vector<Entry> &inVector, bool isExpense)
 {
-    unsigned int inChoice = 0;
+    unsigned int inChoice = 65535;
     char inChar;
-    while (inChoice != 5)
+    while (inChoice != 0)
     {
         drawSubMenu(vectorName);
         cin >> inChoice;
@@ -263,7 +272,7 @@ void subMenuController(std::string vectorName, std::vector<Entry> &inVector, boo
             }
         }
         
-        else if (inChoice == 5)
+        else if (inChoice == 0)
         { cout << "Returning to main menu...\n\n"; }
         
         else
@@ -385,6 +394,37 @@ void saveEntry(int initialValues, std::string filename, std::vector<Entry> &inVe
 }
 
 
+
+void printVector(std::string vectorName, std::vector<Entry> &inVector, int amountToPrint)
+{
+    unsigned int vectorSize = inVector.size();
+    
+    //prints header
+    cout << "\n " << vectorName << "\n";
+    if(inVector[0].getIsExpense())
+    {
+        cout << " ________________________________________________________________________________" << endl;
+        cout << "|  #  |   DATE    |  AMOUNT    |    REASON                                       |" << endl;
+    }
+    else
+    {
+        cout << " ____________________________" << endl;
+        cout << "|  #  |   DATE    |  AMOUNT  |" << endl;
+    }
+    
+    //prints actual values
+    for (unsigned int i = (vectorSize - amountToPrint); i < vectorSize; i++) {
+        cout << "| ";
+        cout << setw(3) << i+1 << " ";
+        inVector[i].printEntry();
+    }
+    
+    //prints footer
+    if(inVector[0].getIsExpense())
+        cout << " --------------------------------------------------------------------------------" << endl;
+    else
+        cout << " ----------------------------" << endl;
+}
 
 
 
