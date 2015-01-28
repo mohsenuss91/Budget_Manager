@@ -200,7 +200,7 @@ void drawSubMenu(std::string category)
     "\t\t*   (2) Remove Input          *\n"
     "\t\t*   (3) Modify Input          *\n"
     "\t\t*   (4) View All              *\n"
-    "\t\t*   (5) Search by date        *\n"
+    "\t\t*   (5) Search By Date        *\n"
     "\t\t*                             *\n"
     "\t\t*******************************\n";
     
@@ -275,11 +275,69 @@ void subMenuController(std::string vectorName, std::vector<Entry> &inVector, boo
         else if (inChoice == 5)
         {
             std::string date;
+            
+            //Get input and display info
             cout << "Enter the date: ";
             cin >> date;
-            cout << "Searching for entries in " << vectorName << " on " << date << "..." << endl;
-            cout << "Results:" << endl;
-            searchVector(inVector, date);
+            
+            if (date.length() >= 6 && date.length() <=8)
+            {
+                
+                
+                
+                // DELETE THIS ONLY TEMP
+                int searchID = 0;
+                unsigned short switcher = 0;
+                char buffer[3];
+                
+                for (int dCursor = 0, bCursor = 0; dCursor != date.length()+1; dCursor++)
+                {
+                    if (bCursor > 2 || switcher > 2)
+                    {
+                        if (date == "BONUS")
+                        {searchID = 122500;} //Christmas Bonus, what should ID be?
+                        else
+                        {
+                            cout << "Stepped over buffer's or switcher's boundaries! Aborting 'calculateSearchID!'";
+                            cout << " Date was " << date << endl;
+                        }
+                        break;
+                    }
+                    if (date[dCursor] == '/' || dCursor == date.length())
+                    {
+                        //ID is generated putting together the date in the order of year,month,day.
+                        if(switcher == 0)
+                            searchID += (atoi(buffer) * 100);
+                        if(switcher == 1)
+                            searchID += (atoi(buffer) * 1);
+                        if(switcher == 2)
+                            searchID += (atoi(buffer) * 10000);
+                        switcher++;
+                        
+                        //resets bCursor and buffer values
+                        bCursor = 0;
+                        buffer[0] = '\0';
+                        buffer[1] = '\0';
+                        buffer[2] = '\0';
+                    }
+                    else
+                    {
+                        buffer[bCursor] = date[dCursor];
+                        bCursor++;
+                    }
+                }
+                // DELETE THIS ONLY TEMP
+                
+                
+                
+                cout << "Searching for entries in " << vectorName << " on " << date << "..." << endl;
+                cout << endl << "RESULTS:" << endl;
+                
+                searchVector(inVector, searchID, inVector.size());
+                waitForEnter();
+            }
+            else
+                {cout << "Invalid date." << endl;}
         }
         
         else if (inChoice == 0)
@@ -407,11 +465,38 @@ void saveEntry(int initialValues, std::string filename, std::vector<Entry> &inVe
 
 
 
-void searchVector(std::string vectorName, std::vector<Entry>& inVector, std::string date) //by date
+void searchVector(std::vector<Entry>& inVector, int id, int max, int min) //by date
 {
+    int mid = min + (max - min) / 2 + 1;
     
-    inVector[0].printEntry();
-    
+    cout << "max, min, mid: " << max << ", " << min << ", " << mid << endl;
+    if(mid == max || mid == min)
+    {
+        cout << "No match found" << endl;
+    }
+    else
+    {
+        if (inVector[mid].getSearchID() > id)
+        {
+            searchVector(inVector, id, mid, min);
+        }
+        else if (inVector[mid].getSearchID() < id)
+        {
+            searchVector(inVector, id, max, mid);
+        }
+        else
+        {
+            //find any other matching id's before mid
+            for(int before = 1; inVector[mid-before].getSearchID() == id; before++)
+                {inVector[mid-before].printEntry();}
+            
+            inVector[mid].printEntry();
+            
+            //find any other matching id's after mid
+            for(int after = 1; inVector[mid+after].getSearchID() == id; after++)
+                {inVector[mid+after].printEntry();}
+        }
+    }
 }
 
 // 'printVector' will print out an optional amount of values (default is 20)
@@ -505,5 +590,10 @@ bool isChanged(std::string vector)
     }
 }
 
+void waitForEnter(void){
+    std::cin.ignore();
+    std::cout << std::endl << "Press [ENTER] to continue...";
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+}
 
 

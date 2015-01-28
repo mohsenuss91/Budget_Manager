@@ -11,7 +11,8 @@
 
             /********************************************************************************
                                                     ToDo
-             Impement search for activity by specific date with binary search
+             fix searchVector occasional infinite loop
+             Factor out verify date to bool expression
              Impement search for activity by year
              Impement search for activity by reason
              Impement search for activity by amount
@@ -122,9 +123,7 @@ int main(void)
                 printVector("EXPENSES", expenses);
                 printVector("SPECIAL EXPENSES", specialExpenses, 8);
                 
-                cin.ignore();
-                cout << endl << "Press [ENTER] to continue...";
-                cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                waitForEnter();
                 break;
             }
             
