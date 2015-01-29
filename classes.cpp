@@ -19,6 +19,7 @@
 
 using namespace std;
 
+// Global variables!! Find a way to implement them locally without overcomplicating code!!
 static bool checkingsChanged = false;
 static bool savingsChanged = false;
 static bool expensesChanged = false;
@@ -207,6 +208,7 @@ void drawSubMenu(std::string category)
     cout << endl << "How will you modify " << category << ": ";
 }
 
+// 'subMenuController' implements all the options from drawSubMenu
 void subMenuController(std::string vectorName, std::vector<Entry> &inVector, bool isExpense)
 {
     unsigned int inChoice = 65535;
@@ -285,7 +287,7 @@ void subMenuController(std::string vectorName, std::vector<Entry> &inVector, boo
                 
                 
                 
-                // DELETE THIS ONLY TEMP
+                // Factor out id algorithm from 'calculateSearchID' and use here
                 int searchID = 0;
                 unsigned short switcher = 0;
                 char buffer[3];
@@ -326,7 +328,7 @@ void subMenuController(std::string vectorName, std::vector<Entry> &inVector, boo
                         bCursor++;
                     }
                 }
-                // DELETE THIS ONLY TEMP
+                // ^ DELETE THIS ONLY TEMP ^
                 
                 
                 
@@ -419,7 +421,7 @@ void saveEntry(int initialValues, std::string filename, std::vector<Entry> &inVe
     {cout << "Error opening file named \"" << filename << "\". New file will be made.\n";}
     
     
-    //checks if values were added or subtracted and either appends or writes new file as a result
+    //checks if values were subtracted and writes new file as a result
     if(deleteWasDone)
     {
         //create a new file to rewrite file without the deleted entries
@@ -428,16 +430,19 @@ void saveEntry(int initialValues, std::string filename, std::vector<Entry> &inVe
         
         cout << "Deleting changes to " << filename << "...\n";
         
-        //write the first entry without a newline and with a newline inside the for loop
+        //write the first entry without a newline
         newFile << '$' << inVector[0].getAmount() << ',';
         if(inVector[0].getIsExpense())
-        { newFile << inVector[0].getReason() << ','; }
+            { newFile << inVector[0].getReason() << ','; }
         newFile << inVector[0].getDate();
+        
+        //writes the rest of the file with newline
+        //using carriage return because apple numbers exports csv's with \r instead of \n
         for (unsigned int i = 1; i < inVector.size(); i++)
         {
             newFile << '\r' << '$' << inVector[i].getAmount() << ',';
             if(inVector[0].getIsExpense())
-            { newFile << inVector[i].getReason() << ','; }
+                { newFile << inVector[i].getReason() << ','; }
             newFile << inVector[i].getDate();
         }
         
@@ -450,6 +455,7 @@ void saveEntry(int initialValues, std::string filename, std::vector<Entry> &inVe
         rename( newFilename.c_str(), filename.c_str() );
         
     }
+    //if no values were deleted then appends all new inputs to file
     else
     {
         cout << "Writing changes to " << filename << "...\n";
@@ -464,12 +470,11 @@ void saveEntry(int initialValues, std::string filename, std::vector<Entry> &inVe
 
 
 
-
+// 'searchVector' is a recursive binary search algorithm, searches for the searchID in each indivudal input that itself is made from the inputs date
 void searchVector(std::vector<Entry>& inVector, int id, int max, int min) //by date
 {
-    int mid = min + (max - min) / 2 + 1;
+    int mid = min + (max - min) / 2;
     
-    cout << "max, min, mid: " << max << ", " << min << ", " << mid << endl;
     if(mid == max || mid == min)
     {
         cout << "No match found" << endl;
@@ -478,11 +483,11 @@ void searchVector(std::vector<Entry>& inVector, int id, int max, int min) //by d
     {
         if (inVector[mid].getSearchID() > id)
         {
-            searchVector(inVector, id, mid, min);
+            searchVector(inVector, id, mid-1, min);
         }
         else if (inVector[mid].getSearchID() < id)
         {
-            searchVector(inVector, id, max, mid);
+            searchVector(inVector, id, max, mid+1);
         }
         else
         {
@@ -590,6 +595,7 @@ bool isChanged(std::string vector)
     }
 }
 
+// 'waitForEnter' does what the name says and empties cin in the process
 void waitForEnter(void){
     std::cin.ignore();
     std::cout << std::endl << "Press [ENTER] to continue...";

@@ -2,8 +2,20 @@
 //  main.cpp
 //  
 //  Budget Manager
-//  A simple c++ implementation
-//  of my finance spreadsheet.
+//  A simple c++ implementation of my finance spreadsheet.
+//
+//  Uses csv files because csv can be opened in Excel or Numbers to manually modify.
+//  Also because my original spreadsheet was made in Numbers so it was easy to export
+//  a csv with all my data to use in this program with minor changes.
+//
+//  Skills used include:
+//  * Vectors
+//  * Classes, Constructors, Destructors
+//  * Dynamic Memory Allocation
+//  * Binary Search
+//  * File I/O
+//  * Abtsraction
+//  * Object Oriented Design
 //
 //  Created by Ivan Hernandez on 1/6/15.
 //  Copyright (c) 2014 Ivan Hernandez. All rights reserved.
@@ -11,7 +23,6 @@
 
             /********************************************************************************
                                                     ToDo
-             fix searchVector occasional infinite loop
              Factor out verify date to bool expression
              Impement search for activity by year
              Impement search for activity by reason
@@ -49,26 +60,6 @@ int main(void)
     loadEntry("/Users/Ivan/Code/Budget_Manager/data/savings.csv", savings);
     loadEntry("/Users/Ivan/Code/Budget_Manager/data/expenses.csv", expenses, true);
     loadEntry("/Users/Ivan/Code/Budget_Manager/data/specialexpenses.csv", specialExpenses, true);
-    
-    /* START uncomment on none mac devices
-    // variables needed to initialize right amount of entries at startup
-    const int NUMOFCHECKINGS = getAmountOfValues("data/checkings.csv");
-    const int NUMOFSAVINGS = getAmountOfValues("data/savings.csv");
-    const int NUMOFEXPENSES = getAmountOfValues("data/expenses.csv");
-    const int NUMOFSPECIALEXPENSES = getAmountOfValues("data/specialexpenses.csv");
-    
-    // initialize vector's needed to store all inputs
-    vector<Entry> checkings(NUMOFCHECKINGS);
-    vector<Entry> savings(NUMOFSAVINGS);
-    vector<Entry> expenses(NUMOFEXPENSES);
-    vector<Entry> specialExpenses(NUMOFSPECIALEXPENSES);
-    
-    // loads files into memory
-    loadEntry("data/checkings.csv", checkings);
-    loadEntry("data/savings.csv", savings);
-    loadEntry("data/expenses.csv", expenses, true);
-    loadEntry("data/specialexpenses.csv", specialExpenses, true);
-     END */
     
     // initialize variables needed to run menu's
     unsigned int inChoice;
@@ -115,7 +106,7 @@ int main(void)
                 break;
             }
                 
-             // Option #5 - Views last 20 inputs of all vectors
+             // Option #5 - Views last 20 inputs by default or other amount via 3rd parameter
             case 5 :
             {
                 printVector("CHECKINGS", checkings);
